@@ -10,7 +10,7 @@ jupyter: python3
 
 My senior design project was essentially randomly assigned. 
 
-The professor gave us a list of potential projects and told us to group up and rank our top five. When we got our assignments, I was a bit dissapointed and confused because I got a project that I did not list on my preferences (something to do with measuring strain using digital image correlation). Stranger still, there had been other people that wanted our project. The professor said that the decisions were final. When asked, he said he ran a monte carlo simulation and picked the one that looked the best. We're not exactly sure what criteria he used, but the result was that many students were suboptimally assigned.
+The professor gave us a list of potential projects and told us to group up and rank our top five. When we got our assignments, I was a bit disappointed and confused because I got a project that I did not list on my preferences (something to do with measuring strain using digital image correlation). Stranger still, there had been other people that wanted our project. The professor said that the decisions were final. When asked, he said he ran a monte carlo simulation and picked the one that looked the best. We're not exactly sure what criteria he used, but the result was that many students were suboptimally assigned.
 
 Years later, I sometimes think of this, and having TA'd some courses with group projects, I wondered if there was a better way. The following is an approach that uses integer programming.
 
@@ -33,7 +33,7 @@ a_{1} & \cdots & a_{N} \\
 $$
 We can set maximum and minimum group sizes by specifying that the sum of the rows of $A$ must be between the bounds.
 
-For our objective, let's go with minimizing the total dissatisfaction of the class. This can be notated consisely as $\min_A\ \text{Tr}(D^\intercal A)$. We can run our optimization as follows.
+For our objective, let's go with minimizing the total dissatisfaction of the class. This can be notated concisely as $\min_A\ \text{Tr}(D^\intercal A)$. We can run our optimization as follows.
 ```{python}
 import cvxpy as cp
 import numpy as np
@@ -64,7 +64,7 @@ student_dissatisfaction = np.diag(dissatisfaction_matrix.T @ assignment_matrix.v
 print(f"The most dissatisfaction a student has is {np.max(student_dissatisfaction):.2f}/1.0")
 ```
 
-That's pretty good, but this doesn't yet solve our problem. It's unreasonable for a student to provide an absolute score for each project. Asking them to pick and rank their top five is much more reasonable. There are many ways you could map a list of five selections to dissatisfaction. One way is to assign constant values to the selections (say, 0 disatisfaction for your top choice, 0.1 for your second, etc). Then, pick some large value for all omitted projects.
+That's pretty good, but this doesn't yet solve our problem. It's unreasonable for a student to provide an absolute score for each project. Asking them to pick and rank their top five is much more reasonable. There are many ways you could map a list of five selections to dissatisfaction. One way is to assign constant values to the selections (say, 0 dissatisfaction for your top choice, 0.1 for your second, etc). Then, pick some large value for all omitted projects.
 
 ```{python}
 num_ranks = 5

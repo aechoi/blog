@@ -103,7 +103,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<meta name="quarto:status" content="draft">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -141,7 +140,7 @@ window.Quarto = {
 <body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -213,7 +212,7 @@ window.Quarto = {
 
 
 <p>My senior design project was essentially randomly assigned.</p>
-<p>The professor gave us a list of potential projects and told us to group up and rank our top five. When we got our assignments, I was a bit dissapointed and confused because I got a project that I did not list on my preferences (something to do with measuring strain using digital image correlation). Stranger still, there had been other people that wanted our project. The professor said that the decisions were final. When asked, he said he ran a monte carlo simulation and picked the one that looked the best. We’re not exactly sure what criteria he used, but the result was that many students were suboptimally assigned.</p>
+<p>The professor gave us a list of potential projects and told us to group up and rank our top five. When we got our assignments, I was a bit disappointed and confused because I got a project that I did not list on my preferences (something to do with measuring strain using digital image correlation). Stranger still, there had been other people that wanted our project. The professor said that the decisions were final. When asked, he said he ran a monte carlo simulation and picked the one that looked the best. We’re not exactly sure what criteria he used, but the result was that many students were suboptimally assigned.</p>
 <p>Years later, I sometimes think of this, and having TA’d some courses with group projects, I wondered if there was a better way. The following is an approach that uses integer programming.</p>
 <p>Say you have <span class="math inline">\(N\)</span> students and <span class="math inline">\(M\)</span> projects. The goal is to group students to the projects they want in a way that optimizes for some sort of preference. For now, let’s say every student provides a dissatisfaction score <span class="math inline">\(d_{n,m} \in [0, \infty)\)</span> for each project. Each student then has a vector <span class="math inline">\(d_n \in \mathbb R^M\)</span>, and the entire class can be described using the following matrix. <span class="math display">\[
 D = \begin{bmatrix}
@@ -229,8 +228,8 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 | &amp; &amp; |
 \end{bmatrix}
 \]</span> We can set maximum and minimum group sizes by specifying that the sum of the rows of <span class="math inline">\(A\)</span> must be between the bounds.</p>
-<p>For our objective, let’s go with minimizing the total dissatisfaction of the class. This can be notated consisely as <span class="math inline">\(\min_A\ \text{Tr}(D^\intercal A)\)</span>. We can run our optimization as follows.</p>
-<div id="a76d632d" class="cell" data-execution_count="1">
+<p>For our objective, let’s go with minimizing the total dissatisfaction of the class. This can be notated concisely as <span class="math inline">\(\min_A\ \text{Tr}(D^\intercal A)\)</span>. We can run our optimization as follows.</p>
+<div id="ef62db7c" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -262,8 +261,8 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 <pre><code>The most dissatisfaction a student has is 0.11/1.0</code></pre>
 </div>
 </div>
-<p>That’s pretty good, but this doesn’t yet solve our problem. It’s unreasonable for a student to provide an absolute score for each project. Asking them to pick and rank their top five is much more reasonable. There are many ways you could map a list of five selections to dissatisfaction. One way is to assign constant values to the selections (say, 0 disatisfaction for your top choice, 0.1 for your second, etc). Then, pick some large value for all omitted projects.</p>
-<div id="475293d2" class="cell" data-execution_count="2">
+<p>That’s pretty good, but this doesn’t yet solve our problem. It’s unreasonable for a student to provide an absolute score for each project. Asking them to pick and rank their top five is much more reasonable. There are many ways you could map a list of five selections to dissatisfaction. One way is to assign constant values to the selections (say, 0 dissatisfaction for your top choice, 0.1 for your second, etc). Then, pick some large value for all omitted projects.</p>
+<div id="f0f57548" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>num_ranks <span class="op">=</span> <span class="dv">5</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>omit_cost <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -291,7 +290,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </div>
 <p>This still works. We know that no one was assigned a project they didn’t like because the most dissatisfaction is less than 1. However, maybe we just got lucky. We’re assigning uniformly random preferences for everyone, so it seems likely you’d be able to get everyone something that they like.</p>
 <p>Let’s assume that the popularity of certain projects follows a sort of <a href="https://en.wikipedia.org/wiki/Zipf%27s_law">Zipfian distribution</a>.</p>
-<div id="563c2658" class="cell" data-execution_count="3">
+<div id="8d7e8e11" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> zipf_pmf(k, N):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return the value of a Zipf probability mass function"""</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> k <span class="op">*</span> <span class="dv">1</span> <span class="op">/</span> np.<span class="bu">sum</span>(<span class="dv">1</span> <span class="op">/</span> np.arange(<span class="dv">1</span>, num_projects <span class="op">+</span> <span class="dv">1</span>))</span>
@@ -311,7 +310,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </div>
 </div>
 <p>We’ll assume that students populate their preference list by picking from this distribution without replacement.</p>
-<div id="88f29474" class="cell" data-execution_count="4">
+<div id="6123fea3" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>trunc_ranks <span class="op">=</span> []</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_students):</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    trunc_ranks.append(np.random.choice(np.arange(num_projects), <span class="dv">5</span>, replace<span class="op">=</span><span class="va">False</span>, p<span class="op">=</span>project_probabilities))</span>
@@ -319,7 +318,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>trunc_ranks <span class="op">=</span> np.asarray(trunc_ranks).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we can solve as before.</p>
-<div id="6f190540" class="cell" data-execution_count="5">
+<div id="d3a58470" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dissatisfaction_matrix <span class="op">=</span> np.zeros((num_projects, num_students)) <span class="op">+</span> omit_cost</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>student_vec <span class="op">=</span> np.arange(num_students)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, rank <span class="kw">in</span> <span class="bu">enumerate</span>(trunc_ranks):</span>
@@ -338,7 +337,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </div>
 </div>
 <p>As expected, the worst case dissatisfaction did go up. But, you know what I can’t get over?</p>
-<div id="781fc540" class="cell" data-execution_count="6">
+<div id="59bc5af5" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of students that didn't get anything on their list: </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">sum</span>(student_dissatisfaction <span class="op">==</span> <span class="dv">1</span>)<span class="sc">}</span><span class="ss">."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Number of students that didn't get anything on their list: 0.</code></pre>
@@ -420,7 +419,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/aechoi\.github\.io\/blog\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
