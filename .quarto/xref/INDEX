@@ -13,5 +13,20 @@
   },
   "posts/test_post.qmd": {
     "test_post.html": "bcc4ff27"
+  },
+  "blog_content/index.qmd": {
+    "index.html": "cb40cfb3"
+  },
+  "blog_content/test_post.qmd": {
+    "test_post.html": "5d7ba6c7"
+  },
+  "blog.qmd": {
+    "blog.html": "6d667031"
+  },
+  "posts/test_subdirectory1/test_post.qmd": {
+    "test_post.html": "d87f06c8"
+  },
+  "posts/test_subdirectory2/test_post.qmd": {
+    "test_post.html": "608eb959"
   }
 }

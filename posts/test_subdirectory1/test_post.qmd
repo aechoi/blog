@@ -1,0 +1,15 @@
+---
+title: "My Second Blog Post"
+date: 2025-07-31
+format: html
+categories:
+- 1
+---
+
+blablabla
+
+And block math:
+
+$$
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+$$

@@ -7,14 +7,13 @@ website:
     left:
       - href: index.qmd
         text: home
-      - about.qmd
-      - href: blog_content/
-        text: blog
+      - href: about.qmd
+        text: about
+      - blog.qmd
 
 format:
   html:
     theme:
-      - cosmo
-      - brand
+      - sandstone
     css: styles.css
     toc: true

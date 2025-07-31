@@ -1,5 +1,40 @@
 ---
-title: "About"
+title: "Alex Choi"
+toc: false
+about:
+    template: trestles
+    image: profile.png
+    links:
+        - icon: github
+          text: GitHub
+          href: https://github.com/aechoi    
+        - icon: linkedin
+          text: LinkedIn
+          href: https://www.linkedin.com/in/alexander-choi/
 ---
 
-About this site
+Hi, I'm a PhD student at the University of Washington studying robotics and control. Previously I worked at Amazon as an Applied Scientist, and before that as a Mechanical Engineer.  
+
+In my free time I do recreational math, code, [play chess](https://www.chess.com/member/westisure), reschedule D&D sessions, and walk my dog (you can see Isaac's ears in the pic).
+
+## Education
+
+**University of Washington** | *Seattle, WA*\
+PhD in Electrical and Computer Engineering | Sep 2024 - Present
+
+**University of Texas** | *Austin, TX*\
+BS in Mechanical Engineering | Aug 2015 - May 2019
+
+## Experience
+
+**Amazon.com** | *Seattle, WA*\
+Applied Scientist II | May 2022 - Jun 2024
+
+**Amazon.com** | *Seattle, WA*\
+Mechanical Engineer II/I | Aug 2019 - May 2022
+
+**SpaceX** | *Hawthorne, CA*\
+Vehicle Engineering Intern | May 2018 - Aug 2018
+
+**Amazon.com** | *Seattle, WA*\
+Product Design Engineering Intern | May 2017 - Aug 2017
