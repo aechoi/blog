@@ -1,5 +1,47 @@
 [
   {
+    "objectID": "posts/test_subdirectory2/test_post.html",
+    "href": "posts/test_subdirectory2/test_post.html",
+    "title": "My Third Blog Post",
+    "section": "",
+    "text": "blablabla\nAnd block math:\n\\[\n\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n\\]"
+  },
+  {
+    "objectID": "posts/test_post.html",
+    "href": "posts/test_post.html",
+    "title": "My First Blog Post",
+    "section": "",
+    "text": "Here is some inline math: ( E = mc^2 )\nAnd block math:\n\\[\n\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n\\]"
+  },
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "blog",
+    "section": "",
+    "text": "Welcome to my blog! Here are recent posts:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMy Third Blog Post\n\n\n\n2\n\n\n\n\n\n\n\n\n\nAug 1, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nMy First Blog Post\n\n\n\n\n\n\n\n\nJul 31, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nMy Second Blog Post\n\n\n\n1\n\n\n\n\n\n\n\n\n\nJul 31, 2025\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Alex Choi",
+    "section": "",
+    "text": "Hi, I’m a PhD student at the University of Washington studying robotics and control. Previously I worked at Amazon as an Applied Scientist, and before that as a Mechanical Engineer.\nIn my free time I do recreational math, code, play chess, reschedule D&D sessions, and walk my dog (you can see Isaac’s ears in the pic)."
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "Alex Choi",
+    "section": "Education",
+    "text": "Education\nUniversity of Washington | Seattle, WA\nPhD in Electrical and Computer Engineering | Sep 2024 - Present\nUniversity of Texas | Austin, TX\nBS in Mechanical Engineering | Aug 2015 - May 2019"
+  },
+  {
+    "objectID": "about.html#experience",
+    "href": "about.html#experience",
+    "title": "Alex Choi",
+    "section": "Experience",
+    "text": "Experience\nAmazon.com | Seattle, WA\nApplied Scientist II | May 2022 - Jun 2024\nAmazon.com | Seattle, WA\nMechanical Engineer II/I | Aug 2019 - May 2022\nSpaceX | Hawthorne, CA\nVehicle Engineering Intern | May 2018 - Aug 2018\nAmazon.com | Seattle, WA\nProduct Design Engineering Intern | May 2017 - Aug 2017"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "hello",
@@ -7,24 +49,10 @@
     "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
   },
   {
-    "objectID": "blog_content/index.html",
-    "href": "blog_content/index.html",
-    "title": "blog",
+    "objectID": "posts/test_subdirectory1/test_post.html",
+    "href": "posts/test_subdirectory1/test_post.html",
+    "title": "My Second Blog Post",
     "section": "",
-    "text": "Welcome to my blog! Here are recent posts:\n\n\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site"
-  },
-  {
-    "objectID": "blog_content/test_post.html",
-    "href": "blog_content/test_post.html",
-    "title": "My First Blog Post",
-    "section": "",
-    "text": "Here is some inline math: ( E = mc^2 )\nAnd block math:\n\\[\n\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n\\]"
+    "text": "blablabla\nAnd block math:\n\\[\n\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n\\]"
   }
 ]

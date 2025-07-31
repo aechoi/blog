@@ -1,6 +1,10 @@
 [
   {
-    "listing": "/blog_content/index.html",
-    "items": []
+    "listing": "/blog.html",
+    "items": [
+      "/posts/test_subdirectory2/test_post.html",
+      "/posts/test_post.html",
+      "/posts/test_subdirectory1/test_post.html"
+    ]
   }
 ]
