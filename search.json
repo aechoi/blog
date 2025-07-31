@@ -1,24 +1,17 @@
 [
   {
-    "objectID": "posts/test_subdirectory2/test_post.html",
-    "href": "posts/test_subdirectory2/test_post.html",
-    "title": "My Third Blog Post",
+    "objectID": "posts/recreational_math/optimal_groups.html",
+    "href": "posts/recreational_math/optimal_groups.html",
+    "title": "Optimal Group Project Assignment",
     "section": "",
-    "text": "blablabla\nAnd block math:\n\\[\n\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n\\]"
-  },
-  {
-    "objectID": "posts/test_post.html",
-    "href": "posts/test_post.html",
-    "title": "My First Blog Post",
-    "section": "",
-    "text": "Here is some inline math: ( E = mc^2 )\nAnd block math:\n\\[\n\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n\\]"
+    "text": "My senior design project was essentially randomly assigned.\nThe professor gave us a list of potential projects and told us to group up and rank our top five. When we got our assignments, I was a bit dissapointed and confused because I got a project that I did not list on my preferences (something to do with measuring strain using digital image correlation). Stranger still, there had been other people that wanted our project. The professor said that the decisions were final. When asked, he said he ran a monte carlo simulation and picked the one that looked the best. We’re not exactly sure what criteria he used, but the result was that many students were suboptimally assigned.\nYears later, I sometimes think of this, and having TA’d some courses with group projects, I wondered if there was a better way. The following is an approach that uses integer programming.\nSay you have \\(N\\) students and \\(M\\) projects. The goal is to group students to the projects they want in a way that optimizes for some sort of preference. For now, let’s say every student provides a dissatisfaction score \\(d_{n,m} \\in [0, \\infty)\\) for each project. Each student then has a vector \\(d_n \\in \\mathbb R^M\\), and the entire class can be described using the following matrix. \\[\nD = \\begin{bmatrix}\n| & & | \\\\\nd_{1} & \\cdots & d_{N} \\\\\n| & & |\n\\end{bmatrix}\n\\]\nEach student must be assigned to one project. This can be described using a 1-hot vector, \\(a_n\\in\\mathbb R^m\\), where the 1 corresponds to the assigned project. Again, the entire class can be assigned using a matrix. This will act as our decision variable. \\[\nA = \\begin{bmatrix}\n| & & | \\\\\na_{1} & \\cdots & a_{N} \\\\\n| & & |\n\\end{bmatrix}\n\\] We can set maximum and minimum group sizes by specifying that the sum of the rows of \\(A\\) must be between the bounds.\nFor our objective, let’s go with minimizing the total dissatisfaction of the class. This can be notated consisely as \\(\\min_A\\ \\text{Tr}(D^\\intercal A)\\). We can run our optimization as follows.\n\nimport cvxpy as cp\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nnp.random.seed(0)\n\nnum_projects = 50\nnum_students = 200\n\nmin_group_size = 3\nmax_group_size = 5\n\ndissatisfaction_matrix = np.random.rand(num_projects, num_students)\nassignment_matrix = cp.Variable((num_projects, num_students), boolean=True)\n\nobjective = cp.Minimize(cp.trace(dissatisfaction_matrix.T @ assignment_matrix))\n\nconstraints = []\nconstraints += [cp.sum(assignment_matrix, axis=0) == 1]  # each student gets assigned to only 1 project\nconstraints += [cp.sum(assignment_matrix, axis=1) &gt;= min_group_size]\nconstraints += [cp.sum(assignment_matrix, axis=1) &lt;= max_group_size]\n\nproblem = cp.Problem(objective, constraints)\nproblem.solve()\n\nstudent_dissatisfaction = np.diag(dissatisfaction_matrix.T @ assignment_matrix.value)\nprint(f\"The most dissatisfaction a student has is {np.max(student_dissatisfaction):.2f}/1.0\")\n\nThe most dissatisfaction a student has is 0.11/1.0\n\n\nThat’s pretty good, but this doesn’t yet solve our problem. It’s unreasonable for a student to provide an absolute score for each project. Asking them to pick and rank their top five is much more reasonable. There are many ways you could map a list of five selections to dissatisfaction. One way is to assign constant values to the selections (say, 0 disatisfaction for your top choice, 0.1 for your second, etc). Then, pick some large value for all omitted projects.\n\nnum_ranks = 5\nomit_cost = 10\n\n# generate rankings from some underlying absolute total ranking\nabsolute_rankings = np.random.rand(num_projects, num_students)\nrankings = np.argsort(absolute_rankings, axis=0)\ntrunc_ranks = rankings[:num_ranks, :]\n\ndissatisfaction_matrix = np.zeros((num_projects, num_students)) + omit_cost\nstudent_vec = np.arange(num_students)\nfor idx, rank in enumerate(trunc_ranks):\n    dissatisfaction_matrix[rank, student_vec] = idx\ndissatisfaction_matrix /= omit_cost # normalize\n\nobjective = cp.Minimize(cp.trace(dissatisfaction_matrix.T @ assignment_matrix))\n\nproblem = cp.Problem(objective, constraints)\nproblem.solve()\n\nstudent_dissatisfaction = np.diag(dissatisfaction_matrix.T @ assignment_matrix.value)\nprint(f\"The most dissatisfaction a student has is {np.max(student_dissatisfaction):.2f}/1.0\")\n\nThe most dissatisfaction a student has is 0.20/1.0\n\n\nThis still works. We know that no one was assigned a project they didn’t like because the most dissatisfaction is less than 1. However, maybe we just got lucky. We’re assigning uniformly random preferences for everyone, so it seems likely you’d be able to get everyone something that they like.\nLet’s assume that the popularity of certain projects follows a sort of Zipfian distribution.\n\ndef zipf_pmf(k, N):\n    \"\"\"Return the value of a Zipf probability mass function\"\"\"\n    return 1 / k * 1 / np.sum(1 / np.arange(1, num_projects + 1))\n\nproject_probabilities = zipf_pmf(np.arange(1, num_projects + 1), num_projects)\nfig, ax = plt.subplots()\nax.bar(np.arange(num_projects), project_probabilities)\nax.set_ylabel(\"Probability\")\nax.set_xlabel(\"Project Index\")\n_ = ax.set_title(\"Probability of Picking a Project\")\n\n\n\n\n\n\n\n\nWe’ll assume that students populate their preference list by picking from this distribution without replacement.\n\ntrunc_ranks = []\nfor _ in range(num_students):\n    trunc_ranks.append(np.random.choice(np.arange(num_projects), 5, replace=False, p=project_probabilities))\n\ntrunc_ranks = np.asarray(trunc_ranks).T\n\nNow we can solve as before.\n\ndissatisfaction_matrix = np.zeros((num_projects, num_students)) + omit_cost\nstudent_vec = np.arange(num_students)\nfor idx, rank in enumerate(trunc_ranks):\n    dissatisfaction_matrix[rank, student_vec] = idx\ndissatisfaction_matrix /= omit_cost # normalize\n\nobjective = cp.Minimize(cp.trace(dissatisfaction_matrix.T @ assignment_matrix))\n\nproblem = cp.Problem(objective, constraints)\nproblem.solve()\n\nstudent_dissatisfaction = np.diag(dissatisfaction_matrix.T @ assignment_matrix.value)\nprint(f\"The most dissatisfaction a student has is {np.max(student_dissatisfaction):.2f}/1.0\")\n\nThe most dissatisfaction a student has is 0.40/1.0\n\n\nAs expected, the worst case dissatisfaction did go up. But, you know what I can’t get over?\n\nprint(f\"Number of students that didn't get anything on their list: {np.sum(student_dissatisfaction == 1)}.\")\n\nNumber of students that didn't get anything on their list: 0."
   },
   {
     "objectID": "blog.html",
     "href": "blog.html",
     "title": "blog",
     "section": "",
-    "text": "Welcome to my blog! Here are recent posts:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMy Third Blog Post\n\n\n\n2\n\n\n\n\n\n\n\n\n\nAug 1, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nMy First Blog Post\n\n\n\n\n\n\n\n\nJul 31, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nMy Second Blog Post\n\n\n\n1\n\n\n\n\n\n\n\n\n\nJul 31, 2025\n\n\n\n\n\nNo matching items"
+    "text": "Welcome to my blog! Here are recent posts:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOptimal Group Project Assignment\n\n\n\noptimization\n\n\n\n\n\n\n\n\n\nJul 31, 2025\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -47,12 +40,5 @@
     "title": "hello",
     "section": "",
     "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
-  },
-  {
-    "objectID": "posts/test_subdirectory1/test_post.html",
-    "href": "posts/test_subdirectory1/test_post.html",
-    "title": "My Second Blog Post",
-    "section": "",
-    "text": "blablabla\nAnd block math:\n\\[\n\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n\\]"
   }
 ]

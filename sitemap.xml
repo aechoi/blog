@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://aechoi.github.io/blog/posts/test_subdirectory2/test_post.html</loc>
-    <lastmod>2025-07-31T15:22:04.659Z</lastmod>
-  </url>
-  <url>
-    <loc>https://aechoi.github.io/blog/posts/test_post.html</loc>
-    <lastmod>2025-07-31T14:42:01.018Z</lastmod>
+    <loc>https://aechoi.github.io/blog/posts/recreational_math/optimal_groups.html</loc>
+    <lastmod>2025-07-31T20:27:09.174Z</lastmod>
   </url>
   <url>
     <loc>https://aechoi.github.io/blog/blog.html</loc>
@@ -19,9 +15,5 @@
   <url>
     <loc>https://aechoi.github.io/blog/index.html</loc>
     <lastmod>2025-07-31T15:00:37.556Z</lastmod>
-  </url>
-  <url>
-    <loc>https://aechoi.github.io/blog/posts/test_subdirectory1/test_post.html</loc>
-    <lastmod>2025-07-31T15:22:26.964Z</lastmod>
   </url>
 </urlset>
