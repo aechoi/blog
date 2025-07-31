@@ -1,32 +1,14 @@
 {
   "about.qmd": {
-    "about.html": "794e9e75"
-  },
-  "index.qmd": {
-    "index.html": "8738fe00"
-  },
-  "test_post.qmd": {
-    "test_post.html": "f45c1ea9"
-  },
-  "posts/index.qmd": {
-    "index.html": "4e11d67e"
-  },
-  "posts/test_post.qmd": {
-    "test_post.html": "bcc4ff27"
-  },
-  "blog_content/index.qmd": {
-    "index.html": "cb40cfb3"
-  },
-  "blog_content/test_post.qmd": {
-    "test_post.html": "5d7ba6c7"
+    "about.html": "fea73566"
   },
   "blog.qmd": {
-    "blog.html": "6d667031"
+    "blog.html": "672a322f"
   },
-  "posts/test_subdirectory1/test_post.qmd": {
-    "test_post.html": "d87f06c8"
+  "index.qmd": {
+    "index.html": "5c154131"
   },
-  "posts/test_subdirectory2/test_post.qmd": {
-    "test_post.html": "608eb959"
+  "posts/recreational_math/optimal_groups.qmd": {
+    "optimal_groups.html": "a97ca84b"
   }
 }
