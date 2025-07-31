@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://aechoi.github.io/blog/posts/test_post.html</loc>
-    <lastmod>2025-07-31T14:42:01.018Z</lastmod>
+    <loc>https://aechoi.github.io/blog/index.html</loc>
+    <lastmod>2025-07-31T15:00:37.556Z</lastmod>
   </url>
   <url>
-    <loc>https://aechoi.github.io/blog/index.html</loc>
-    <lastmod>2025-07-31T14:42:01.016Z</lastmod>
+    <loc>https://aechoi.github.io/blog/blog_content/index.html</loc>
+    <lastmod>2025-07-31T14:42:01.017Z</lastmod>
   </url>
   <url>
     <loc>https://aechoi.github.io/blog/about.html</loc>
     <lastmod>2025-07-31T14:42:01.016Z</lastmod>
   </url>
   <url>
-    <loc>https://aechoi.github.io/blog/posts/index.html</loc>
-    <lastmod>2025-07-31T14:42:01.017Z</lastmod>
+    <loc>https://aechoi.github.io/blog/blog_content/test_post.html</loc>
+    <lastmod>2025-07-31T14:42:01.018Z</lastmod>
   </url>
 </urlset>

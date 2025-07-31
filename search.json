@@ -1,17 +1,17 @@
 [
   {
-    "objectID": "posts/test_post.html",
-    "href": "posts/test_post.html",
-    "title": "My First Blog Post",
-    "section": "",
-    "text": "Here is some inline math: ( E = mc^2 )\nAnd block math:\n\\[\n\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n\\]"
-  },
-  {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "blog",
+    "title": "hello",
     "section": "",
     "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+  },
+  {
+    "objectID": "blog_content/index.html",
+    "href": "blog_content/index.html",
+    "title": "blog",
+    "section": "",
+    "text": "Welcome to my blog! Here are recent posts:\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -21,10 +21,10 @@
     "text": "About this site"
   },
   {
-    "objectID": "posts/index.html",
-    "href": "posts/index.html",
-    "title": "blog",
+    "objectID": "blog_content/test_post.html",
+    "href": "blog_content/test_post.html",
+    "title": "My First Blog Post",
     "section": "",
-    "text": "Welcome to my blog! Here are recent posts:\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Here is some inline math: ( E = mc^2 )\nAnd block math:\n\\[\n\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n\\]"
   }
 ]
