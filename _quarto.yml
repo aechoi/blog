@@ -8,7 +8,7 @@ website:
       - href: index.qmd
         text: home
       - about.qmd
-      - href: posts/
+      - href: blog_content/
         text: blog
 
 format:

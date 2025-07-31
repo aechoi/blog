@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "posts/test_post.html",
+    "href": "posts/test_post.html",
+    "title": "My First Blog Post",
+    "section": "",
+    "text": "Here is some inline math: ( E = mc^2 )\nAnd block math:\n\\[\n\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n\\]"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "blog",
@@ -14,10 +21,10 @@
     "text": "About this site"
   },
   {
-    "objectID": "test_post.html",
-    "href": "test_post.html",
-    "title": "My First Blog Post",
+    "objectID": "posts/index.html",
+    "href": "posts/index.html",
+    "title": "blog",
     "section": "",
-    "text": "Here is some inline math: ( E = mc^2 )\nAnd block math:\n\\[\n\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n\\]"
+    "text": "Welcome to my blog! Here are recent posts:\n\n\n\n\n\n\n\n\nNo matching items"
   }
 ]

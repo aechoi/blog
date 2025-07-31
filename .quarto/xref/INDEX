@@ -7,5 +7,11 @@
   },
   "test_post.qmd": {
     "test_post.html": "f45c1ea9"
+  },
+  "posts/index.qmd": {
+    "index.html": "4e11d67e"
+  },
+  "posts/test_post.qmd": {
+    "test_post.html": "bcc4ff27"
   }
 }
