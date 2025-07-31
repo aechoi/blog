@@ -1,0 +1,13 @@
+---
+title: "My First Blog Post"
+date: 2025-07-31
+format: html
+---
+
+Here is some inline math: \( E = mc^2 \)
+
+And block math:
+
+$$
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+$$

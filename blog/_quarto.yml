@@ -1,0 +1,20 @@
+project:
+  type: website
+
+website:
+  title: "alex choi"
+  navbar:
+    left:
+      - href: index.qmd
+        text: home
+      - about.qmd
+      - href: posts/
+        text: blog
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
