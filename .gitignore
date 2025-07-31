@@ -202,4 +202,15 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-/.quarto/
+# Quarto output directories
+_site/
+_publish/
+
+# Quarto cache
+.quarto/
+
+# R-related temp files (if using R)
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
