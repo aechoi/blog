@@ -1,0 +1,83 @@
+---
+title: Animatronic "Henry"
+date: 2023-10-25
+date-modified: 2025-07-31
+format: html
+categories:
+- hardware
+draft: true
+bibliography: ref.bibtex
+---
+
+I made a head tracked desktop animatronic.
+
+On streaming sites like Twitch or YouTube, there has been an increasing number of “V-Tuber” [Virtual YouTuber] entertainers. These typically consist of a streamer controlling a virtual avatar via motion tracking. I wanted to take the same idea but control a physical avatar using a similar method.
+
+Below is a demo of what I ended up with. His name is Henry.
+
+{{< video https://www.youtube.com/watch?v=LTtSCtOySfA >}}
+
+I started by defining some of the requirements including the types of motions I wanted Henry to be capable of. Looking side to side and up/down were needed, but roll isn’t a very natural thing for your neck to do. I also wanted a face that was expressive enough to convey some basic emotions while being simple enough to be controlled by an Arduino that I had lying around.
+
+I also needed the face to look fine on camera. LEDs behind a thin two layer 3D print provided a soft, diffuse light while providing a simple way to structurally hold the LEDs. 
+
+::: {layout-ncol=2}
+![A closeup of Henry's face](figs/closeup.png)
+
+![A closer up](figs/closerup.png)
+:::
+
+After experimenting a bit, I made the following CAD models in SolidWorks to begin printing of the parts (Ender 3). 
+
+::: {layout-ncol=3}
+![](figs/henry_front.png){height=3}
+
+![](figs/henry_back.png){height=3}
+
+![](figs/henry_explode.png){height=3}
+
+:::
+
+Before soldering things together, I tested things by first jumpering all the connections to a bread board. The circuitry is just hooking up some servos and LEDs, so there’s not much to it other than selecting some resistor values. I did end up using some logic level fets because I was running out of GPIO pins on the Arduino Uno. 
+
+::: {layout-ncol=2}
+![](figs/wiring.webp){height=4}
+
+![](figs/wiring_setup.webp){height=4}
+:::
+
+The Arduino communicated over serial to a python script I had made which does a couple things.
+
+1. Measure the RMS of my microphone
+2. Track the pose of the user’s head and extract azimuth/elevation angles
+3. Listen for keyboard commands that switched the facial expressions (couldn’t get emotion recognition working consistently enough)
+
+After validating that everything was working properly, I made two PCBs (using KiCad), one for Henry’s face and a shield for the Arduino that housed the electronics. 
+
+::: {layout-ncol=2}
+![](figs/board_face.png)
+
+![](figs/board_shield.png)
+:::
+
+Swapping these in significantly reduced the number of cables that needed to plug into Henry’s head, making his movements much faster and more natural. 
+
+::: {layout-ncol=2}
+![](figs/installed_board_face.webp){height=4}
+
+![](figs/installed_board_shield.webp){height=4}
+:::
+
+The final and most difficult part of this project was to decide on whether his smile should be a full smile or a smirk. Honestly, I think the smirk looks better, but I’ve been told it makes it look like his face is just broken 🤷‍♂️. 
+
+::: {layout-ncol=2}
+![](figs/smile_full.png){height=2} 
+
+![](figs/smile_smirk.png){height=2} 
+:::
+
+::: {.callout-note}
+## Edit History
+
+- **2025-07-31**: Reformatted for new site
+:::

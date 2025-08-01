@@ -214,3 +214,5 @@ _publish/
 .Rhistory
 .RData
 .Ruserdata
+
+/.quarto/
