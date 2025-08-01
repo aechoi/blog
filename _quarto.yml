@@ -10,6 +10,16 @@ website:
       - href: about.qmd
         text: about
       - blog.qmd
+  page-footer:
+    right:
+      - icon: envelope-fill
+        href: mailto:contact@alexchoi.me
+      - icon: github
+        href: https://github.com/aechoi
+      - icon: linkedin
+        href: https://www.linkedin.com/in/alexander-choi/
+    border: true
+    background: dark
 
 format:
   html:

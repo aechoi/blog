@@ -2,6 +2,8 @@
 title: "hello"
 ---
 
-This is a Quarto website.
+Hi, I'm Alex, you can learn more about me on the [about page](about.qmd).
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+This website stores a collection of my personal projects, academic papers, technical demos, or anything else I may have had a part in authoring. Check out the [blog](blog.qmd) for more.
+
+To email/contact Alex Choi (me), email [contact@alexchoi.me](mailto:contact@alexchoi.me)

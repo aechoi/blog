@@ -53,8 +53,42 @@ I implemented some head tracking and mapped the location of the face in the fram
 
 Ultimately I was hoping that I could prank some of my coworkers in our online meetings, but it turns out most VOIP software streams mono audio to save on network bandwidth.
 
+::: {#refs}
+## References
+
+:::
+
 ::: {.callout-note}
 ## Edit History
 
 - **2025-07-31**: Reformatted for new site
 :::
+
+<!-- ::: {.share-buttons}
+### Share
+{{page.permalink}}
+[{{< fa brands twitter >}}](https://twitter.com/intent/tweet?url={{ page.url | url_absolute | uri_escape }})
+[{{< fa brands reddit >}}]()
+[{{< fa brands discord >}}]()
+[{{< fa brands slack >}}]()
+[{{< fa brands facebook >}}]()
+[{{< fa envelope >}}]()
+::: -->
+---
+
+<script src="https://giscus.app/client.js"
+        data-repo="aechoi/blog"
+        data-repo-id="R_kgDOPWDacg"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOPWDacs4CtpTY"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="en"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>

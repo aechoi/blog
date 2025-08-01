@@ -5,6 +5,9 @@ about:
     template: trestles
     image: profile.png
     links:
+        - icon: envelope-fill
+          text: Email
+          href: mailto:contact@alexchoi.me
         - icon: github
           text: GitHub
           href: https://github.com/aechoi    
@@ -13,7 +16,7 @@ about:
           href: https://www.linkedin.com/in/alexander-choi/
 ---
 
-Hi, I'm a PhD student at the University of Washington studying robotics and control. Previously I worked at Amazon as an Applied Scientist, and before that as a Mechanical Engineer.  
+Hi, I'm a PhD student at the University of Washington studying robotics and control. Previously I worked at Amazon as an Applied Scientist, and before that as a Mechanical Engineer. Even further back, I co-founded Longhorn Racing Electric, the Formula SAE Electric team at UT Austin.
 
 In my free time I do recreational math, code, [play chess](https://www.chess.com/member/westisure), reschedule D&D sessions, and walk my dog (you can see Isaac's ears in the pic).
 
