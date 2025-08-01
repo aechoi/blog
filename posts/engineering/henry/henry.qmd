@@ -5,7 +5,7 @@ date-modified: 2025-07-31
 format: html
 categories:
 - hardware
-draft: true
+draft: false
 bibliography: ref.bibtex
 ---
 
@@ -38,7 +38,7 @@ After experimenting a bit, I made the following CAD models in SolidWorks to begi
 
 :::
 
-Before soldering things together, I tested things by first jumpering all the connections to a bread board. The circuitry is just hooking up some servos and LEDs, so there’s not much to it other than selecting some resistor values. I did end up using some logic level fets because I was running out of GPIO pins on the Arduino Uno. 
+Before soldering things together, I tested things by first jumpering all the connections to a breadboard. The circuitry is just hooking up some servos and LEDs, so there’s not much to it other than selecting some resistor values. I did end up using some logic level fets because I was running out of GPIO pins on the Arduino Uno. 
 
 ::: {layout-ncol=2}
 ![](figs/wiring.webp){height=4}

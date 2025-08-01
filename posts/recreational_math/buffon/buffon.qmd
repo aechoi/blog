@@ -1,0 +1,57 @@
+---
+title: A Multidimensional Extension of Buffon's Needle Problem
+date: 2023-11-17
+date-modified: 2025-07-31
+format: html
+categories:
+- probability
+draft: false
+# bibliography: ref.bibtex
+---
+
+I made a paper on a multidimensional extension of Buffon’s needle problem
+
+In my free time I wrote this paper on a multidimensional extension of Buffon’s needle problem. Here it is:
+
+<iframe src="buffon_extension.pdf" width="100%" height="600px">
+  This browser does not support PDFs. Please download the PDF to view it: 
+  <a href="buffon_extension.pdf">Download PDF</a>
+</iframe>
+
+You might be asking, “Why did you decide to write a paper on a multidimensional extension of Buffon’s needle problem?”. That’s a good question. If you want to go straight to the technical stuff skip the next section.
+
+So it started because I was doing one of the Jane Street puzzles back in August, specifically [this one](https://www.janestreet.com/puzzles/single-cross-2-index/).
+
+The way I went about the solution was realizing that this seemed really similar to the Buffon Needle problem which I had heard about through a [Numberphile](https://www.youtube.com/watch?v=sJVivjuMfWA) video from way back. I did some modeling on paper and simulation on python and came to a solution by extending the method used for the Buffon Needle in 2D to 3D. Then I got to thinking that someone must have already derived this for all dimensions and I probably could have saved myself a bunch of time by just looking directly for the multidimensional solution. I searched google scholar, arXiv, Wikipedia, but I couldn’t find a generalized solution anywhere. So I figured this would be a good exercise in writing a paper. 
+
+# The Extension
+
+I’m not going to describe everything in the doc because it’d take too long, but I’ll describe the main points here.
+
+The problem statement is as follows. Imagine a space that is tiled by hyperplanes. In 2D this would be regularly spaced horizontal and/or vertical lines, in 3D this would be orthogonal sets of parallel planes, in 4D this would be up to 4 orthogonal sets of parallel 3D volumes, etc. Anything up to an arbitrary D-dimensional space. Now imagine a needle is randomly placed and oriented in that space. Find the probability that the needle crosses more than some number, c, of hyperplanes. To make it trickier, imagine that the needle could be any length, there could be any number of hyperplanes (from N=1 parallel set to N=D parallel sets), and the spacing between the parallel hyperplanes doesn’t have to be the same for every set. 
+
+![](figs/buffon_ext.png)
+
+The strategy is as follows, model the needle using higher dimensional spherical coordinates, then integrate using the necessary conditions for crossing some number of hyperplanes as the bounds of integration.
+
+This gets trickier when there are N>1 hyperplane directions. Mainly because now there are many different combinations of hyperplanes that can be crossed to achieve some number of total crossings. In this case we can use the [inclusion-exclusion principle](https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle) to combine the multiple individual probabilities.
+
+After a lot of calculus you end up with expressions for the probability of crossing. You can compare this to simulated versions of the needle as well. Below are the probabilities of having more than some number of crossings for a single hyperplane. 
+
+![](figs/single_cross_lower.png)
+
+You can use algebra to then derive the probability of crossing exactly some number of hyperplanes as well. 
+
+![](figs/single_cross_exact.png)
+
+Below are the probabilities with multiple hyperplanes. For this problem there doesn’t seem to be a closed-form way to represent the probability with elementary functions if the needle is longer than the hyperplane spacing. 
+
+![](figs/multi_plane_cross.png)
+
+You can find the scripts I used and the .tex files on my [github repo here](https://github.com/aechoi/buffon_extension). As of writing this it’s not fully polished up so fair warning. 
+
+::: {.callout-note}
+## Edit History
+
+- **2025-07-31**: Reformatted for new site
+:::
