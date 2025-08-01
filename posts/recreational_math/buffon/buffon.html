@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-10-25">
+<meta name="dcterms.date" content="2023-11-17">
 
-<title>Animatronic “Henry” – alex choi</title>
+<title>A Multidimensional Extension of Buffon’s Needle Problem – alex choi</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,17 +113,23 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-extension" id="toc-the-extension" class="nav-link active" data-scroll-target="#the-extension">The Extension</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Animatronic “Henry”</h1>
+<h1 class="title">A Multidimensional Extension of Buffon’s Needle Problem</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">hardware</div>
+    <div class="quarto-category">probability</div>
   </div>
   </div>
 
@@ -135,7 +141,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 25, 2023</p>
+      <p class="date">November 17, 2023</p>
     </div>
   </div>
   
@@ -153,96 +159,28 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>I made a head tracked desktop animatronic.</p>
-<p>On streaming sites like Twitch or YouTube, there has been an increasing number of “V-Tuber” [Virtual YouTuber] entertainers. These typically consist of a streamer controlling a virtual avatar via motion tracking. I wanted to take the same idea but control a physical avatar using a similar method.</p>
-<p>Below is a demo of what I ended up with. His name is Henry.</p>
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/LTtSCtOySfA" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-<p>I started by defining some of the requirements including the types of motions I wanted Henry to be capable of. Looking side to side and up/down were needed, but roll isn’t a very natural thing for your neck to do. I also wanted a face that was expressive enough to convey some basic emotions while being simple enough to be controlled by an Arduino that I had lying around.</p>
-<p>I also needed the face to look fine on camera. LEDs behind a thin two layer 3D print provided a soft, diffuse light while providing a simple way to structurally hold the LEDs.</p>
-<div class="quarto-layout-panel" data-layout-ncol="2">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="figs/closeup.png" class="img-fluid figure-img"></p>
-<figcaption>A closeup of Henry’s face</figcaption>
-</figure>
-</div>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="figs/closerup.png" class="img-fluid figure-img"></p>
-<figcaption>A closer up</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p>After experimenting a bit, I made the following CAD models in SolidWorks to begin printing of the parts (Ender 3).</p>
-<div class="quarto-layout-panel" data-layout-ncol="3">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img src="figs/henry_front.png" class="img-fluid"></p>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img src="figs/henry_back.png" class="img-fluid"></p>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img src="figs/henry_explode.png" class="img-fluid"></p>
-</div>
-</div>
-</div>
-<p>Before soldering things together, I tested things by first jumpering all the connections to a breadboard. The circuitry is just hooking up some servos and LEDs, so there’s not much to it other than selecting some resistor values. I did end up using some logic level fets because I was running out of GPIO pins on the Arduino Uno.</p>
-<div class="quarto-layout-panel" data-layout-ncol="2">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="figs/wiring.webp" class="img-fluid"></p>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="figs/wiring_setup.webp" class="img-fluid"></p>
-</div>
-</div>
-</div>
-<p>The Arduino communicated over serial to a python script I had made which does a couple things.</p>
-<ol type="1">
-<li>Measure the RMS of my microphone</li>
-<li>Track the pose of the user’s head and extract azimuth/elevation angles</li>
-<li>Listen for keyboard commands that switched the facial expressions (couldn’t get emotion recognition working consistently enough)</li>
-</ol>
-<p>After validating that everything was working properly, I made two PCBs (using KiCad), one for Henry’s face and a shield for the Arduino that housed the electronics.</p>
-<div class="quarto-layout-panel" data-layout-ncol="2">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="figs/board_face.png" class="img-fluid"></p>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="figs/board_shield.png" class="img-fluid"></p>
-</div>
-</div>
-</div>
-<p>Swapping these in significantly reduced the number of cables that needed to plug into Henry’s head, making his movements much faster and more natural.</p>
-<div class="quarto-layout-panel" data-layout-ncol="2">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="figs/installed_board_face.webp" class="img-fluid"></p>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="figs/installed_board_shield.webp" class="img-fluid"></p>
-</div>
-</div>
-</div>
-<p>The final and most difficult part of this project was to decide on whether his smile should be a full smile or a smirk. Honestly, I think the smirk looks better, but I’ve been told it makes it look like his face is just broken 🤷‍♂️.</p>
-<div class="quarto-layout-panel" data-layout-ncol="2">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="figs/smile_full.png" class="img-fluid"></p>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img src="figs/smile_smirk.png" class="img-fluid"></p>
-</div>
-</div>
-</div>
+<p>I made a paper on a multidimensional extension of Buffon’s needle problem</p>
+<p>In my free time I wrote this paper on a multidimensional extension of Buffon’s needle problem. Here it is:</p>
+<iframe src="buffon_extension.pdf" width="100%" height="600px">
+This browser does not support PDFs. Please download the PDF to view it: <a href="buffon_extension.pdf">Download PDF</a>
+</iframe>
+<p>You might be asking, “Why did you decide to write a paper on a multidimensional extension of Buffon’s needle problem?”. That’s a good question. If you want to go straight to the technical stuff skip the next section.</p>
+<p>So it started because I was doing one of the Jane Street puzzles back in August, specifically <a href="https://www.janestreet.com/puzzles/single-cross-2-index/">this one</a>.</p>
+<p>The way I went about the solution was realizing that this seemed really similar to the Buffon Needle problem which I had heard about through a <a href="https://www.youtube.com/watch?v=sJVivjuMfWA">Numberphile</a> video from way back. I did some modeling on paper and simulation on python and came to a solution by extending the method used for the Buffon Needle in 2D to 3D. Then I got to thinking that someone must have already derived this for all dimensions and I probably could have saved myself a bunch of time by just looking directly for the multidimensional solution. I searched google scholar, arXiv, Wikipedia, but I couldn’t find a generalized solution anywhere. So I figured this would be a good exercise in writing a paper.</p>
+<section id="the-extension" class="level1">
+<h1>The Extension</h1>
+<p>I’m not going to describe everything in the doc because it’d take too long, but I’ll describe the main points here.</p>
+<p>The problem statement is as follows. Imagine a space that is tiled by hyperplanes. In 2D this would be regularly spaced horizontal and/or vertical lines, in 3D this would be orthogonal sets of parallel planes, in 4D this would be up to 4 orthogonal sets of parallel 3D volumes, etc. Anything up to an arbitrary D-dimensional space. Now imagine a needle is randomly placed and oriented in that space. Find the probability that the needle crosses more than some number, c, of hyperplanes. To make it trickier, imagine that the needle could be any length, there could be any number of hyperplanes (from N=1 parallel set to N=D parallel sets), and the spacing between the parallel hyperplanes doesn’t have to be the same for every set.</p>
+<p><img src="figs/buffon_ext.png" class="img-fluid"></p>
+<p>The strategy is as follows, model the needle using higher dimensional spherical coordinates, then integrate using the necessary conditions for crossing some number of hyperplanes as the bounds of integration.</p>
+<p>This gets trickier when there are N&gt;1 hyperplane directions. Mainly because now there are many different combinations of hyperplanes that can be crossed to achieve some number of total crossings. In this case we can use the <a href="https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle">inclusion-exclusion principle</a> to combine the multiple individual probabilities.</p>
+<p>After a lot of calculus you end up with expressions for the probability of crossing. You can compare this to simulated versions of the needle as well. Below are the probabilities of having more than some number of crossings for a single hyperplane.</p>
+<p><img src="figs/single_cross_lower.png" class="img-fluid"></p>
+<p>You can use algebra to then derive the probability of crossing exactly some number of hyperplanes as well.</p>
+<p><img src="figs/single_cross_exact.png" class="img-fluid"></p>
+<p>Below are the probabilities with multiple hyperplanes. For this problem there doesn’t seem to be a closed-form way to represent the probability with elementary functions if the needle is longer than the hyperplane spacing.</p>
+<p><img src="figs/multi_plane_cross.png" class="img-fluid"></p>
+<p>You can find the scripts I used and the .tex files on my <a href="https://github.com/aechoi/buffon_extension">github repo here</a>. As of writing this it’s not fully polished up so fair warning.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -260,6 +198,7 @@ Edit History
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
