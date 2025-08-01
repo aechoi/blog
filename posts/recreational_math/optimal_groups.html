@@ -229,7 +229,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 \end{bmatrix}
 \]</span> We can set maximum and minimum group sizes by specifying that the sum of the rows of <span class="math inline">\(A\)</span> must be between the bounds.</p>
 <p>For our objective, let’s go with minimizing the total dissatisfaction of the class. This can be notated concisely as <span class="math inline">\(\min_A\ \text{Tr}(D^\intercal A)\)</span>. We can run our optimization as follows.</p>
-<div id="d3d301ce" class="cell" data-execution_count="1">
+<div id="fd2a5a6b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -262,7 +262,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </div>
 </div>
 <p>That’s pretty good, but this doesn’t yet solve our problem. It’s unreasonable for a student to provide an absolute score for each project. Asking them to pick and rank their top five is much more reasonable. There are many ways you could map a list of five selections to dissatisfaction. One way is to assign constant values to the selections (say, 0 dissatisfaction for your top choice, 0.1 for your second, etc). Then, pick some large value for all omitted projects.</p>
-<div id="89792f94" class="cell" data-execution_count="2">
+<div id="4f1172fe" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>num_ranks <span class="op">=</span> <span class="dv">5</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>omit_cost <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -290,7 +290,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </div>
 <p>This still works. We know that no one was assigned a project they didn’t like because the most dissatisfaction is less than 1. However, maybe we just got lucky. We’re assigning uniformly random preferences for everyone, so it seems likely you’d be able to get everyone something that they like.</p>
 <p>Let’s assume that the popularity of certain projects follows a sort of <a href="https://en.wikipedia.org/wiki/Zipf%27s_law">Zipfian distribution</a>.</p>
-<div id="c823ef68" class="cell" data-execution_count="3">
+<div id="95d6cf1f" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> zipf_pmf(k, N):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return the value of a Zipf probability mass function"""</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> k <span class="op">*</span> <span class="dv">1</span> <span class="op">/</span> np.<span class="bu">sum</span>(<span class="dv">1</span> <span class="op">/</span> np.arange(<span class="dv">1</span>, num_projects <span class="op">+</span> <span class="dv">1</span>))</span>
@@ -310,7 +310,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </div>
 </div>
 <p>We’ll assume that students populate their preference list by picking from this distribution without replacement.</p>
-<div id="9de077eb" class="cell" data-execution_count="4">
+<div id="f7c59203" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>trunc_ranks <span class="op">=</span> []</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_students):</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    trunc_ranks.append(np.random.choice(np.arange(num_projects), <span class="dv">5</span>, replace<span class="op">=</span><span class="va">False</span>, p<span class="op">=</span>project_probabilities))</span>
@@ -318,7 +318,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>trunc_ranks <span class="op">=</span> np.asarray(trunc_ranks).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we can solve as before.</p>
-<div id="a8edb0b0" class="cell" data-execution_count="5">
+<div id="655fbf05" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dissatisfaction_matrix <span class="op">=</span> np.zeros((num_projects, num_students)) <span class="op">+</span> omit_cost</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>student_vec <span class="op">=</span> np.arange(num_students)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, rank <span class="kw">in</span> <span class="bu">enumerate</span>(trunc_ranks):</span>
@@ -337,12 +337,26 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </div>
 </div>
 <p>As expected, the worst case dissatisfaction did go up. But, you know what I can’t get over?</p>
-<div id="d9523a2b" class="cell" data-execution_count="6">
+<div id="a13cc796" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of students that didn't get anything on their list: </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">sum</span>(student_dissatisfaction <span class="op">==</span> <span class="dv">1</span>)<span class="sc">}</span><span class="ss">."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Number of students that didn't get anything on their list: 0.</code></pre>
 </div>
 </div>
+<!-- REFERENCES -->
+<!-- ::: {#refs}
+## References
+::: -->
+<!-- EDIT HISTORY -->
+<!-- ::: {.callout-note}
+## Edit History
+
+- **2025-07-31**: Reformatted for new site
+::: -->
+<hr>
+<!-- COMMENTS/REACTIONS -->
+<script src="https://giscus.app/client.js" data-repo="aechoi/blog" data-repo-id="R_kgDOPWDacg" data-category="Announcements" data-category-id="DIC_kwDOPWDacs4CtpTY" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" data-loading="lazy" crossorigin="anonymous" async="">
+</script>
 
 
 
