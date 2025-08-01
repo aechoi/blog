@@ -57,6 +57,7 @@ Ultimately I was hoping that I could prank some of my coworkers in our online me
 ## References
 
 :::
+---
 
 ::: {.callout-note}
 ## Edit History

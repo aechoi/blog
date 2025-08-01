@@ -54,6 +54,7 @@ You can find the scripts I used and the .tex files on my [github repo here](http
 <!-- ::: {#refs}
 ## References
 ::: -->
+---
 
 <!-- EDIT HISTORY -->
 ::: {.callout-note}

@@ -80,6 +80,7 @@ The final and most difficult part of this project was to decide on whether his s
 <!-- ::: {#refs}
 ## References
 ::: -->
+---
 
 <!-- EDIT HISTORY -->
 ::: {.callout-note}
