@@ -124,6 +124,14 @@ div.csl-indent {
     <a class="nav-link" href="../../../blog.html"> 
 <span class="menu-text">blog</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../demos.html"> 
+<span class="menu-text">demos</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../publications/publications.html"> 
+<span class="menu-text">publications</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -140,16 +148,16 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#references" id="toc-references" class="nav-link active" data-scroll-target="#references">References</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link active" data-scroll-target="#references"><span class="header-section-number">1</span> References</a></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="head_related_tfs.ipynb" download="head_related_tfs.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Generating 3D Audio with Head Related Transfer Functions (HRTFs)</h1>
+<div class="quarto-title-block"><div><h1 class="title">Generating 3D Audio with Head Related Transfer Functions (HRTFs)</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://www.github.com/aechoi/blog/blob/main/posts/recreational_math/head_related_tfs/head_related_tfs.qmd"><i class="bi"></i> Code</button></div></div>
   <div class="quarto-categories">
     <div class="quarto-category">signal processing</div>
   </div>
@@ -216,8 +224,8 @@ div.csl-indent {
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/0wei2It-2oM" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <p>Ultimately I was hoping that I could prank some of my coworkers in our online meetings, but it turns out most VOIP software streams mono audio to save on network bandwidth.</p>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
+<section id="references" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="references"><span class="header-section-number">1</span> References</h2>
 <div id="ref-Bernschutz2013" class="csl-entry" role="listitem">
 Bernschütz, Benjamin. 2013. <span>“A Spherical Far Field HRIR/HRTF Compilation of the Neumann KU 100.”</span> In <em>Proceedings of the AIA-DAGA Conference on Acoustics</em>. Merano, Italy. <a href="http://audiogroup.web.th-koeln.de/FILES/AIA-DAGA2013_HRIRs.pdf">http://audiogroup.web.th-koeln.de/FILES/AIA-DAGA2013_HRIRs.pdf</a>.
 </div>
@@ -226,6 +234,7 @@ Gamper, Hannes. 2013. <span>“Head-Related Transfer Function Interpolation in A
 </div>
 </section>
 </div>
+<hr>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -327,6 +336,57 @@ Edit History
         container: window.document.getElementById('quarto-embedded-source-code-modal')
       });
       clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);

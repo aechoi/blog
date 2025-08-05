@@ -102,6 +102,14 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="../../../blog.html"> 
 <span class="menu-text">blog</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../demos.html"> 
+<span class="menu-text">demos</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../publications/publications.html"> 
+<span class="menu-text">publications</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -118,16 +126,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-extension" id="toc-the-extension" class="nav-link active" data-scroll-target="#the-extension">The Extension</a></li>
+  <li><a href="#the-extension" id="toc-the-extension" class="nav-link active" data-scroll-target="#the-extension"><span class="header-section-number">1</span> The Extension</a></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="buffon.ipynb" download="buffon.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">A Multidimensional Extension of Buffon’s Needle Problem</h1>
+<div class="quarto-title-block"><div><h1 class="title">A Multidimensional Extension of Buffon’s Needle Problem</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://www.github.com/aechoi/blog/blob/main/posts/recreational_math/buffon/buffon.qmd"><i class="bi"></i> Code</button></div></div>
   <div class="quarto-categories">
     <div class="quarto-category">probability</div>
   </div>
@@ -167,8 +175,8 @@ This browser does not support PDFs. Please download the PDF to view it: <a href=
 <p>You might be asking, “Why did you decide to write a paper on a multidimensional extension of Buffon’s needle problem?”. That’s a good question. If you want to go straight to the technical stuff skip the next section.</p>
 <p>So it started because I was doing one of the Jane Street puzzles back in August, specifically <a href="https://www.janestreet.com/puzzles/single-cross-2-index/">this one</a>.</p>
 <p>The way I went about the solution was realizing that this seemed really similar to the Buffon Needle problem which I had heard about through a <a href="https://www.youtube.com/watch?v=sJVivjuMfWA">Numberphile</a> video from way back. I did some modeling on paper and simulation on python and came to a solution by extending the method used for the Buffon Needle in 2D to 3D. Then I got to thinking that someone must have already derived this for all dimensions and I probably could have saved myself a bunch of time by just looking directly for the multidimensional solution. I searched google scholar, arXiv, Wikipedia, but I couldn’t find a generalized solution anywhere. So I figured this would be a good exercise in writing a paper.</p>
-<section id="the-extension" class="level1">
-<h1>The Extension</h1>
+<section id="the-extension" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> The Extension</h1>
 <p>I’m not going to describe everything in the doc because it’d take too long, but I’ll describe the main points here.</p>
 <p>The problem statement is as follows. Imagine a space that is tiled by hyperplanes. In 2D this would be regularly spaced horizontal and/or vertical lines, in 3D this would be orthogonal sets of parallel planes, in 4D this would be up to 4 orthogonal sets of parallel 3D volumes, etc. Anything up to an arbitrary D-dimensional space. Now imagine a needle is randomly placed and oriented in that space. Find the probability that the needle crosses more than some number, c, of hyperplanes. To make it trickier, imagine that the needle could be any length, there could be any number of hyperplanes (from N=1 parallel set to N=D parallel sets), and the spacing between the parallel hyperplanes doesn’t have to be the same for every set.</p>
 <p><img src="figs/buffon_ext.png" class="img-fluid"></p>
@@ -185,6 +193,7 @@ This browser does not support PDFs. Please download the PDF to view it: <a href=
 <!-- ::: {#refs}
 ## References
 ::: -->
+<hr>
 <!-- EDIT HISTORY -->
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -279,6 +288,57 @@ Edit History
         container: window.document.getElementById('quarto-embedded-source-code-modal')
       });
       clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);

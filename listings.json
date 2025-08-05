@@ -1,5 +1,13 @@
 [
   {
+    "listing": "/publications/publications.html",
+    "items": []
+  },
+  {
+    "listing": "/demos.html",
+    "items": []
+  },
+  {
     "listing": "/blog.html",
     "items": [
       "/posts/recreational_math/optimal_groups.html",
