@@ -2,11 +2,10 @@
 title: TEMPLATE
 date: today
 # date-modified: 2025-07-31
-format: html
 categories:
 - template
-draft: true
 bibliography: ref.bibtex
+draft: true
 ---
 
 <!-- BODY -->

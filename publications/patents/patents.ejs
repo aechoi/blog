@@ -1,0 +1,35 @@
+<style>
+  .entry {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1em;
+  }
+
+  .thumbnail {
+    width: 128px;
+    height: auto;
+    margin-right: 1em;
+    object-fit: contain;
+  }
+
+  .entry-content {
+    line-height: 1.2;
+  }
+
+  .entry-content p {
+    margin: 0.2em 0;
+  }
+</style>
+
+```{=html} <% for (const item of items) { %>
+<div class="entry">
+  <img src="<%= item.img %>" class="thumbnail" />
+  <div class="entry-content">
+    <p><strong><%= item.title %></strong></p>
+    <p><%= item.authors %></p>
+    <p><%= item.patentnumber %></p>
+    <p><em><%= item.date %></em></p>
+    <a href="<%= item.pdf %>" class="btn-primary">PDF</a>
+  </div>
+</div>
+<% } %> ```

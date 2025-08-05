@@ -1,0 +1,27 @@
+- title: Compressing load signal transmissions
+  authors: S. Bhadsavle, A. Choi, G. Jordan, P. Munger, R. Riggs, B. Yee, M. Zimmer
+  patentnumber: U.S. Patent 11,940,320 B1
+  date: 2024/03/26
+  pdf: patents/11940320_CCWD/11940320_CCWD.pdf
+  img: patents/11940320_CCWD/img.png
+
+- title: Dynamic decay compensation for first order high pass filters
+  authors: A. Choi, J. Drewniak, P. Munger, A. Nonaka, A. Rahimi, M. Zimmer
+  patentnumber: U.S. Patent 12,353,500 B1
+  date: 2025/07/08
+  pdf: patents/12353500_dynamicDecayCompensation/12353500_dynamicDecayCompensation.pdf
+  img: patents/12353500_dynamicDecayCompensation/img.png
+
+- title: Piezoelectric weight sensing apparatus
+  authors: R. Riggs, A. Pierce, C. Volk, A. Choi, R. Ahud, G. Jordan, P. Munger, J. Drewniak
+  patentnumber: U.S. Patent 11,796,378 B1
+  date: 2023/10/24
+  pdf: patents/11796378_piezoWeightSense/11796378_piezoWeightSense.pdf
+  img: patents/11796378_piezoWeightSense/img.png
+
+- title: Determining inventory levels using switch-equipped strips and patterns of activated or deactivated indicators
+  authors: M. DesJardien, K. Doe, D. Beltzer, A. Pierce, A. Choi, J. Drewniak, P. Munger, R. Riggs, S. Dholakia, M. Mosman, S. Phan Lung Li
+  patentnumber: U.S. Patent 11,410,122 B1
+  date: 2022/08/09
+  pdf: patents/11410122_impulseStrips/11410122_impulseStrips.pdf
+  img: patents/11410122_impulseStrips/img.png
