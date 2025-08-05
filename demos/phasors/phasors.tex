@@ -1,0 +1,510 @@
+% Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  letterpaper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
+
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{241,243,245}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.40,0.45,0.13}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.07,0.07,0.07}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+
+
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
+
+\KOMAoption{captions}{tableheading}
+\makeatletter
+\@ifpackageloaded{tcolorbox}{}{\usepackage[skins,breakable]{tcolorbox}}
+\@ifpackageloaded{fontawesome5}{}{\usepackage{fontawesome5}}
+\definecolor{quarto-callout-color}{HTML}{909090}
+\definecolor{quarto-callout-note-color}{HTML}{0758E5}
+\definecolor{quarto-callout-important-color}{HTML}{CC1914}
+\definecolor{quarto-callout-warning-color}{HTML}{EB9113}
+\definecolor{quarto-callout-tip-color}{HTML}{00A047}
+\definecolor{quarto-callout-caution-color}{HTML}{FC5300}
+\definecolor{quarto-callout-color-frame}{HTML}{acacac}
+\definecolor{quarto-callout-note-color-frame}{HTML}{4582ec}
+\definecolor{quarto-callout-important-color-frame}{HTML}{d9534f}
+\definecolor{quarto-callout-warning-color-frame}{HTML}{f0ad4e}
+\definecolor{quarto-callout-tip-color-frame}{HTML}{02b875}
+\definecolor{quarto-callout-caution-color-frame}{HTML}{fd7e14}
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Phasors},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+
+\title{Phasors}
+\author{}
+\date{2025-08-04}
+\begin{document}
+\maketitle
+
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ plotly.io }\ImportTok{as}\NormalTok{ pio}
+\NormalTok{pio.renderers.default }\OperatorTok{=} \StringTok{"plotly\_mimetype+notebook\_connected"}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Introduction}\label{introduction}
+
+For many, phasors can feel a bit mystical. Many students may simply
+memorize the rules associated with them and run calculations without
+developing a more fundamental understanding. It's not uncommon for this
+to be the case at both the undergraduate and graduate level.
+
+The goal of this document is to motivate the use of phasors from the
+ground up, as well as to provide visual representations of complex
+numbers that make them intuitive to understand. Hopefully by the end,
+they seem like an obviously good choice for modeling sinusoidal signals.
+
+\section{Preliminaries: Complex Numbers and Euler's
+Equation}\label{preliminaries-complex-numbers-and-eulers-equation}
+
+Before talking about sinusoids or time domain signals, let's start by
+coming to grips with Euler's equation. Let's start by asking the
+question, what does it mean to raise a number to an imaginary power?
+
+\[ e^i = ?\]
+
+Exponential notation, \(e^a\), naivly seems to imply \(a\) repeated
+multiplications of \(e\). However, recall that exponents have been
+extended from natural numbers to whole numbers (\(e^0 = 1\)), integers
+(\(e^{-a} = 1/e^a\)), rational numbers (\(e^{1/2} = \sqrt{e}\)), and
+real numbers (\href{https://xkcd.com/217/}{\(e^\pi - \pi = 20\)}). None
+of these hold on to the concept of repeated multiplication. Instead,
+they use a different property of exponentiation to derive these
+relationships (namely,
+\(e^ae^b=e^{a+b} \implies \exp(a)\exp(b) = \exp(a+b)\)).
+
+The properties of exponentials can be generalized further to accept
+complex inputs. Just like how exponentiation can be generalized from
+repeated multiplication to a function that relates the product of
+outputs to the sum of inputs, it can be generalized again such that it
+is a function that is its own derivative.
+
+\[
+e^x = \frac{\text{d}e^x}{\text{d}x}
+\]
+
+We will first derive Euler's Equation, then examine some of its
+properties.
+
+\subsection{Deriving Euler's Equation from Picard
+Iterates}\label{deriving-eulers-equation-from-picard-iterates}
+
+Say we want to define a function, \(f(x)\), that is equal to its own
+derivative. \[f(x) = f'(x)\]
+
+You may already know what the answer is, but let's try to rederive it.
+We'll start by making a guess. \[f_0(x) = 1\]
+
+This is a pretty bad guess. We know that \(f_0'(x) = 0\), but we need
+\(f_0'(x) = f_0(x) = 1\).
+
+Watch how we'll improve this iteratively (for a truly rigorous
+treatment, see
+\href{https://en.wikipedia.org/wiki/Picard–Lindelöf_theorem}{Picard
+Iterates}).
+
+\begin{align}
+f_0(x) &= 1 \\
+f'_0(x) &= 0\\
+\\
+f_1(x) &= 1+x \\
+f_1'(x) &= 1\\
+\\
+f_2(x) &= 1 + x + \frac{1}{2}x^2 \\
+f'_2(x) &= 1 + x\\
+
+&\vdots \\
+
+f(x) &= 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots = \sum_{k=0}^\infty \frac{x^k}{k!}\\
+f'(x) &= 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots = \sum_{k=0}^\infty \frac{x^k}{k!}
+\end{align}
+
+We end up with a familiar equation for the Taylor expansion of \(e^x\).
+Notationally, we can keep the form of \(e^x\), but semantically we
+should refer to this infinite sum.
+
+\begin{tcolorbox}[enhanced jigsaw, breakable, coltitle=black, colframe=quarto-callout-note-color-frame, opacityback=0, left=2mm, leftrule=.75mm, titlerule=0mm, bottomtitle=1mm, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, arc=.35mm, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Exercise}, colback=white, opacitybacktitle=0.6, toptitle=1mm, bottomrule=.15mm]
+
+Verify that this does in fact satisfy the product rule for exponentials
+(\(e^ae^b = e^{a+b}\)). Convince yourself that every other property of
+exponentials will hold.
+
+\end{tcolorbox}
+
+With this form, we can simply plug in \(i\) as an argument to see what
+the result is. In other words:
+\[e^i = 1 +i +\frac{-1}{2} + i\frac{-1}{3!} +\dots\]
+
+The above is just some complex number. It doesn't really simplify well,
+but we can try extracting some structure by evaluating \(e^{i\theta}\)
+where \(\theta \in \mathbb R\).
+
+\[e^{i\theta} = 1 + i\theta + \frac{-\theta^2}{2} + i\frac{-\theta^3}{3!} + \dots \\
+= \left(1 - \frac{\theta^2}{2} + \dots \right) + i\left(\theta - \frac{\theta^3}{3!} + \dots \right)\]
+
+If you recall your Taylor Series, you may recognize the right hand side
+as the series for \(\cos{\theta}\) and \(\sin{\theta}\). Resulting in
+
+\[e^{i\theta} = \cos{\theta} + i\sin{\theta}\]
+
+Thus, we rederive Euler's Equation.
+
+The complex exponential of every other base can be obtained by recalling
+the property that
+\(a^{i\theta} = (e^{\ln a})^{i\theta} = e^{i\theta\ln a}\)
+
+\subsection{Properties of Euler's
+Equation}\label{properties-of-eulers-equation}
+
+Euler's equation evaluates to some complex number.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# import plotly.graph\_objects as go}
+\CommentTok{\# import numpy as np}
+
+\CommentTok{\# slider\_steps = np.linspace({-}2*np.pi, 2*np.pi, 101)}
+
+\CommentTok{\# fig = go.Figure(}
+\CommentTok{\#     data=[go.Scatter(x=[0, np.cos(0)], y=[0, np.sin(0)], line=dict(width=6),),}
+\CommentTok{\#           go.Scatter(x=)],}
+\CommentTok{\#     layout=go.Layout(}
+\CommentTok{\#         xaxis=dict(range=[{-}2, 2], scaleanchor="y", constrain="domain"),}
+\CommentTok{\#         yaxis=dict(range=[{-}2, 2]),}
+\CommentTok{\#         sliders=[dict(}
+\CommentTok{\#             steps=[}
+\CommentTok{\#                 dict(method="animate",}
+\CommentTok{\#                      args=[[f"\{i\}"],}
+\CommentTok{\#                            \{"mode": "immediate", "frame": \{"duration": 0, "redraw": True\}, "transition": \{"duration": 0\}\}],}
+\CommentTok{\#                      label=rf"Angle = \{np.round(angle, 2)\}")}
+\CommentTok{\#                 for i, angle in enumerate(slider\_steps)}
+\CommentTok{\#             ],}
+\CommentTok{\#             active=int(len(slider\_steps)/2),}
+\CommentTok{\#         )]}
+\CommentTok{\#     ),}
+\CommentTok{\#     frames=[}
+\CommentTok{\#         go.Frame(}
+\CommentTok{\#             data=[go.Scatter(x=[0, np.cos(angle)], y=[0, np.sin(angle)],}
+\CommentTok{\#                              mode="lines+markers",}
+\CommentTok{\#                              line=dict(width=6))],}
+\CommentTok{\#             name=f"\{i\}"}
+\CommentTok{\#         )}
+\CommentTok{\#         for i, angle in enumerate(slider\_steps)}
+\CommentTok{\#     ]}
+\CommentTok{\# )}
+
+\CommentTok{\# fig.add\_trace(go.Scatter(}
+\CommentTok{\#     x=arc\_x,}
+\CommentTok{\#     y=arc\_y,}
+\CommentTok{\#     mode=\textquotesingle{}lines\textquotesingle{},}
+\CommentTok{\#     line=dict(color=\textquotesingle{}red\textquotesingle{}, dash=\textquotesingle{}dot\textquotesingle{}),}
+\CommentTok{\#     name=\textquotesingle{}Angle Arc\textquotesingle{}}
+\CommentTok{\# ))}
+
+\CommentTok{\# fig.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# \# Parameters}
+\CommentTok{\# theta = np.pi / 3  \# 60 degrees}
+\CommentTok{\# arc\_radius = 0.5}
+\CommentTok{\# arc\_resolution = 100  \# number of points on the arc}
+
+\CommentTok{\# \# Compute arc points}
+\CommentTok{\# arc\_angles = np.linspace(0, theta, arc\_resolution)}
+\CommentTok{\# arc\_x = arc\_radius * np.cos(arc\_angles)}
+\CommentTok{\# arc\_y = arc\_radius * np.sin(arc\_angles)}
+
+\CommentTok{\# \# Main vector (phasor)}
+\CommentTok{\# vector\_x = np.cos(theta)}
+\CommentTok{\# vector\_y = np.sin(theta)}
+
+\CommentTok{\# fig = go.Figure()}
+
+\CommentTok{\# \# Draw the main vector}
+\CommentTok{\# fig.add\_trace(go.Scatter(}
+\CommentTok{\#     x=[0, vector\_x],}
+\CommentTok{\#     y=[0, vector\_y],}
+\CommentTok{\#     mode=\textquotesingle{}lines+markers\textquotesingle{},}
+\CommentTok{\#     line=dict(color=\textquotesingle{}blue\textquotesingle{}, width=3),}
+\CommentTok{\#     name=\textquotesingle{}Vector\textquotesingle{}}
+\CommentTok{\# ))}
+
+\CommentTok{\# \# Draw the arc}
+\CommentTok{\# fig.add\_trace(go.Scatter(}
+\CommentTok{\#     x=arc\_x,}
+\CommentTok{\#     y=arc\_y,}
+\CommentTok{\#     mode=\textquotesingle{}lines\textquotesingle{},}
+\CommentTok{\#     line=dict(color=\textquotesingle{}red\textquotesingle{}, dash=\textquotesingle{}dot\textquotesingle{}),}
+\CommentTok{\#     name=\textquotesingle{}Angle Arc\textquotesingle{}}
+\CommentTok{\# ))}
+
+\CommentTok{\# \# Optional: Add annotation for angle label}
+\CommentTok{\# fig.add\_annotation(}
+\CommentTok{\#     x=arc\_radius * np.cos(theta / 2),}
+\CommentTok{\#     y=arc\_radius * np.sin(theta / 2),}
+\CommentTok{\#     text=r\textquotesingle{}$\textbackslash{}theta$\textquotesingle{},}
+\CommentTok{\#     showarrow=False,}
+\CommentTok{\#     font=dict(size=16)}
+\CommentTok{\# )}
+
+\CommentTok{\# \# Aspect ratio and limits}
+\CommentTok{\# fig.update\_layout(}
+\CommentTok{\#     xaxis=dict(scaleanchor=\textquotesingle{}y\textquotesingle{}, range=[{-}1.2, 1.2]),}
+\CommentTok{\#     yaxis=dict(range=[{-}1.2, 1.2]),}
+\CommentTok{\#     width=500,}
+\CommentTok{\#     height=500,}
+\CommentTok{\#     showlegend=False}
+\CommentTok{\# )}
+\CommentTok{\# fig.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{0}{1}
+\section{References}\label{references}
+
+\end{CSLReferences}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\begin{tcolorbox}[enhanced jigsaw, breakable, coltitle=black, colframe=quarto-callout-note-color-frame, opacityback=0, left=2mm, leftrule=.75mm, titlerule=0mm, bottomtitle=1mm, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, arc=.35mm, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Edit History}, colback=white, opacitybacktitle=0.6, toptitle=1mm, bottomrule=.15mm]
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{20YY-MM-DD}: EDIT NOTE
+\end{itemize}
+
+\end{tcolorbox}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+
+
+
+\end{document}

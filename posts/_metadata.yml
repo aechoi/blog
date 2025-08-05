@@ -1,0 +1,9 @@
+format:
+  html:
+    code-fold: show
+    code-tools:
+      source: repo
+  ipynb: default
+execute:
+  enabled: true
+number-sections: true

@@ -10,6 +10,7 @@ website:
       - href: about.qmd
         text: about
       - blog.qmd
+      - demos.qmd
   page-footer:
     right:
       - icon: envelope-fill
@@ -20,6 +21,7 @@ website:
         href: https://www.linkedin.com/in/alexander-choi/
     border: true
     background: dark
+  repo-url: https://www.github.com/aechoi/blog
 
 format:
   html:

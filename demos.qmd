@@ -1,0 +1,10 @@
+---
+title: "demos"
+listing:
+  contents: demos
+  sort: "date desc"
+  type: default
+  categories: true
+---
+
+This page lists any visualizations, interactive graphics, or teaching material I've made.
