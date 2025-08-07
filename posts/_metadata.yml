@@ -7,3 +7,9 @@ format:
 execute:
   enabled: true
 number-sections: true
+comments:
+  giscus:
+    repo: aechoi/blog
+    repo-id: R_kgDOPWDacg
+    loading: lazy
+    category: Announcements
