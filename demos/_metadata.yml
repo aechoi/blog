@@ -7,3 +7,5 @@ format:
 execute:
   enabled: true
 number-sections: true
+comments:
+  hypothesis: true
