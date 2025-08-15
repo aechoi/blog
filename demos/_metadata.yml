@@ -4,8 +4,8 @@ format:
     code-tools:
       source: repo
   ipynb: default
-execute:
-  enabled: true
+# execute:
+#   enabled: true
 number-sections: true
 comments:
   hypothesis: true
