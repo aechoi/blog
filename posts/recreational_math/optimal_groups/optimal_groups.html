@@ -237,7 +237,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 \end{bmatrix}
 \]</span> We can set maximum and minimum group sizes by specifying that the sum of the rows of <span class="math inline">\(A\)</span> must be between the bounds.</p>
 <p>For our objective, let’s go with minimizing the total dissatisfaction of the class. This can be notated concisely as <span class="math inline">\(\min_A\ \text{Tr}(D^\intercal A)\)</span>. We can run our optimization as follows.</p>
-<div id="d1dbf217" class="cell" data-execution_count="1">
+<div id="707f4737" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
@@ -273,7 +273,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </div>
 </div>
 <p>That’s pretty good, but this doesn’t yet solve our problem. It’s unreasonable for a student to provide an absolute score for each project. Asking them to pick and rank their top five is much more reasonable. There are many ways you could map a list of five selections to dissatisfaction. One way is to assign constant values to the selections (say, 0 dissatisfaction for your top choice, 0.1 for your second, etc). Then, pick some large value for all omitted projects.</p>
-<div id="9f122568" class="cell" data-execution_count="2">
+<div id="e2ee4903" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>num_ranks <span class="op">=</span> <span class="dv">5</span></span>
@@ -304,7 +304,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </div>
 <p>This still works. We know that no one was assigned a project they didn’t like because the most dissatisfaction is less than 1. However, maybe we just got lucky. We’re assigning uniformly random preferences for everyone, so it seems likely you’d be able to get everyone something that they like.</p>
 <p>Let’s assume that the popularity of certain projects follows a sort of <a href="https://en.wikipedia.org/wiki/Zipf%27s_law">Zipfian distribution</a>.</p>
-<div id="11904cf6" class="cell" data-execution_count="3">
+<div id="61d5f7a7" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> zipf_pmf(k, N):</span>
@@ -327,7 +327,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </div>
 </div>
 <p>We’ll assume that students populate their preference list by picking from this distribution without replacement.</p>
-<div id="3eac0971" class="cell" data-execution_count="4">
+<div id="9a018daa" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>trunc_ranks <span class="op">=</span> []</span>
@@ -338,7 +338,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </details>
 </div>
 <p>Now we can solve as before.</p>
-<div id="2c2b778a" class="cell" data-execution_count="5">
+<div id="5fe14331" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dissatisfaction_matrix <span class="op">=</span> np.zeros((num_projects, num_students)) <span class="op">+</span> omit_cost</span>
@@ -360,7 +360,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </div>
 </div>
 <p>As expected, the worst case dissatisfaction did go up. But, you know what I can’t get over?</p>
-<div id="43b18a35" class="cell" data-execution_count="6">
+<div id="6fd3bb50" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of students that didn't get anything on their list: </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">sum</span>(student_dissatisfaction <span class="op">==</span> <span class="dv">1</span>)<span class="sc">}</span><span class="ss">."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

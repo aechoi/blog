@@ -5,7 +5,9 @@
   },
   {
     "listing": "/demos.html",
-    "items": []
+    "items": [
+      "/demos/phasors/phasors.html"
+    ]
   },
   {
     "listing": "/blog.html",
