@@ -79,13 +79,41 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-title','listing-authors','listing-patent-number','listing-date',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] }],
+      valueNames: ['listing-title','listing-authors','listing-patentnumber','listing-date','listing-pdf','listing-img',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] }],
       
-      searchColumns: ["listing-title","listing-authors","listing-patent-number","listing-date"],
+      searchColumns: ["listing-title","listing-authors","listing-patentnumber","listing-date","listing-pdf","listing-img"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
     window['quarto-listings']['listing-patents'] = new List('listing-patents', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-course-papers .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-title','listing-authors','listing-date','listing-pdf','listing-img',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] }],
+      
+      searchColumns: ["listing-title","listing-authors","listing-date","listing-pdf","listing-img"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-course-papers'] = new List('listing-course-papers', options);
 
     if (window['quarto-listing-loaded']) {
       window['quarto-listing-loaded']();
@@ -215,27 +243,120 @@ window.Quarto = {
 <section id="patents" class="level2">
 <h2 class="anchored" data-anchor-id="patents">patents</h2>
 <div id="listing-patents" class="quarto-listing quarto-listing-container-custom">
-<p>
-<strong>Dynamic decay compensation for first order high pass filters</strong>
-</p>
-<p>
-A. Choi, J. Drewniak, P. Munger, A. Nonaka, A. Rahimi, M. Zimmer
-</p>
-<p>
-<strong>Compressing load signal transmissions</strong>
-</p>
-<p>
-S. Bhadsavle, A. Choi, G. Jordan, P. Munger, R. Riggs, B. Yee, M. Zimmer
-</p>
+<style>
+  .entry {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1em;
+  }
+
+  .thumbnail {
+    width: 128px;
+    height: auto;
+    margin-right: 1em;
+    object-fit: contain;
+  }
+
+  .entry-content {
+    line-height: 1.2;
+  }
+
+  .entry-content p {
+    margin: 0.2em 0;
+  }
+</style>
+<div class="entry">
+  <img src="publications/patents/12353500_dynamicDecayCompensation/img.png" class="thumbnail">
+  <div class="entry-content">
+    <p><strong>Dynamic decay compensation for first order high pass filters</strong></p>
+    <p>A. Choi, J. Drewniak, P. Munger, A. Nonaka, A. Rahimi, M. Zimmer</p>
+    <p>U.S. Patent 12,353,500 B1</p>
+    <p><em>Jul 8, 2025</em></p>
+    <a href="publications/patents/12353500_dynamicDecayCompensation/12353500_dynamicDecayCompensation.pdf" class="btn-primary">PDF</a>
+  </div>
+</div>
+
+<div class="entry">
+  <img src="publications/patents/11940320_CCWD/img.png" class="thumbnail">
+  <div class="entry-content">
+    <p><strong>Compressing load signal transmissions</strong></p>
+    <p>S. Bhadsavle, A. Choi, G. Jordan, P. Munger, R. Riggs, B. Yee, M. Zimmer</p>
+    <p>U.S. Patent 11,940,320 B1</p>
+    <p><em>Mar 26, 2024</em></p>
+    <a href="publications/patents/11940320_CCWD/11940320_CCWD.pdf" class="btn-primary">PDF</a>
+  </div>
+</div>
+
+<div class="entry">
+  <img src="publications/patents/11796378_piezoWeightSense/img.png" class="thumbnail">
+  <div class="entry-content">
+    <p><strong>Piezoelectric weight sensing apparatus</strong></p>
+    <p>R. Riggs, A. Pierce, C. Volk, A. Choi, R. Ahud, G. Jordan, P. Munger, J. Drewniak</p>
+    <p>U.S. Patent 11,796,378 B1</p>
+    <p><em>Oct 24, 2023</em></p>
+    <a href="publications/patents/11796378_piezoWeightSense/11796378_piezoWeightSense.pdf" class="btn-primary">PDF</a>
+  </div>
+</div>
+
+<div class="entry">
+  <img src="publications/patents/11410122_impulseStrips/img.png" class="thumbnail">
+  <div class="entry-content">
+    <p><strong>Determining inventory levels using switch-equipped strips and patterns of activated or deactivated indicators</strong></p>
+    <p>M. DesJardien, K. Doe, D. Beltzer, A. Pierce, A. Choi, J. Drewniak, P. Munger, R. Riggs, S. Dholakia, M. Mosman, S. Phan Lung Li</p>
+    <p>U.S. Patent 11,410,122 B1</p>
+    <p><em>Aug 9, 2022</em></p>
+    <a href="publications/patents/11410122_impulseStrips/11410122_impulseStrips.pdf" class="btn-primary">PDF</a>
+  </div>
+</div>
 <div class="listing-no-matching d-none">No matching items</div>
 </div>
-<p>A. E. Choi et al., “Dynamic decay compensation for first order high pass filters,” U.S. Patent 12,353,500 B1, Jul.&nbsp;8, 2025.</p>
-<p>S. S. Bhadsavle et al., “Compressing load signal transmissions,” U.S. Patent 11,940,320 B1, Mar.&nbsp;26, 2024.</p>
-<p>R. M. Riggs et al., “Piezoelectric weight sensing apparatus,” U.S. Patent 11,796,378 B1, Oct.&nbsp;24, 2023.</p>
-<p>M. R. DesJardien et al., “Determining inventory levels using switch-equipped strips and patterns of activated or deactivated indicators,” U.S. Patent 11,410,122 B1, Aug.&nbsp;9, 2022.</p>
 </section>
 <section id="course-papers" class="level2">
 <h2 class="anchored" data-anchor-id="course-papers">course papers</h2>
+<div id="listing-course-papers" class="quarto-listing quarto-listing-container-custom">
+<style>
+  .entry {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1em;
+  }
+
+  .thumbnail {
+    width: 128px;
+    height: auto;
+    margin-right: 1em;
+    object-fit: contain;
+  }
+
+  .entry-content {
+    line-height: 1.2;
+  }
+
+  .entry-content p {
+    margin: 0.2em 0;
+  }
+</style>
+<div class="entry">
+  <img src="publications/course_papers/opt_ctrl_SBurden/img.png" class="thumbnail">
+  <div class="entry-content">
+    <p><strong>LQR-Trees with Modified Distance Heuristics</strong></p>
+    <p>A. Choi</p>
+    <p><em>Jun 13, 2025</em></p>
+    <a href="publications/course_papers/opt_ctrl_SBurden/opt_ctrl_SBurden.pdf" class="btn-primary">PDF</a>
+  </div>
+</div>
+
+<div class="entry">
+  <img src="publications/course_papers/548_final_proj/img.png" class="thumbnail">
+  <div class="entry-content">
+    <p><strong>A Comparative Study of Autonomous Quadrotor Race Trajectory Generation Methods and Controllers</strong></p>
+    <p>S. Akhetova, A. Choi, B. Sarigol</p>
+    <p><em>Jun 12, 2025</em></p>
+    <a href="publications/course_papers/548_final_proj/548_final_proj.pdf" class="btn-primary">PDF</a>
+  </div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div>
 
 
 
@@ -314,7 +435,7 @@ S. Bhadsavle, A. Choi, G. Jordan, P. Munger, R. Riggs, B. Yee, M. Zimmer
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/alexchoi\.me");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

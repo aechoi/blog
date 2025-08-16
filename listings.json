@@ -1,21 +1,22 @@
 [
   {
-    "listing": "/publications/publications.html",
+    "listing": "/publications.html",
     "items": []
   },
   {
     "listing": "/demos.html",
     "items": [
-      "/demos/phasors/phasors.html"
+      "/demos/interactive_phasors.html"
     ]
   },
   {
     "listing": "/blog.html",
     "items": [
-      "/posts/recreational_math/optimal_groups/optimal_groups.html",
-      "/posts/recreational_math/buffon/buffon.html",
-      "/posts/engineering/henry/henry.html",
-      "/posts/recreational_math/head_related_tfs/head_related_tfs.html"
+      "/blog/phasors.html",
+      "/blog/optimal_groups.html",
+      "/blog/buffon.html",
+      "/blog/henry.html",
+      "/blog/head_related_tfs.html"
     ]
   }
 ]
