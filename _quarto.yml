@@ -11,7 +11,7 @@ website:
         text: about
       - blog.qmd
       - demos.qmd
-      - publications/publications.qmd
+      - publications.qmd
   page-footer:
     right:
       - icon: envelope-fill

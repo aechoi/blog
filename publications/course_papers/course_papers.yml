@@ -1,11 +1,11 @@
 - title: A Comparative Study of Autonomous Quadrotor Race Trajectory Generation Methods and Controllers
   authors: S. Akhetova, A. Choi, B. Sarigol
   date: 2025/06/12
-  pdf: course_papers/548_final_proj/548_final_proj.pdf
-  img: course_papers/548_final_proj/img.png
+  pdf: publications/course_papers/548_final_proj/548_final_proj.pdf
+  img: publications/course_papers/548_final_proj/img.png
 
 - title: LQR-Trees with Modified Distance Heuristics
   authors: A. Choi
   date: 2025/06/13
-  pdf: course_papers/opt_ctrl_SBurden/opt_ctrl_SBurden.pdf
-  img: course_papers/opt_ctrl_SBurden/img.png
+  pdf: publications/course_papers/opt_ctrl_SBurden/opt_ctrl_SBurden.pdf
+  img: publications/course_papers/opt_ctrl_SBurden/img.png

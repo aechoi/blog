@@ -4,6 +4,10 @@ title: "hello"
 
 Hi, I'm Alex, you can learn more about me on the [about page](about.qmd).
 
-This website stores a collection of my personal projects, academic papers, technical demos, or anything else I may have had a part in authoring. Check out the [blog](blog.qmd) for more.
+This website stores a collection of my work including
+
+- [blog](blog.qmd) - Personal projects, tutorials, misc stories
+- [demos](demos.qmd) - Technical demos, visualizations
+- [publications](publications.qmd) - Papers, patents, school projects
 
 To email/contact Alex Choi (me), email [contact@alexchoi.me](mailto:contact@alexchoi.me)

@@ -1,0 +1,308 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "f937141c",
+   "metadata": {},
+   "source": [
+    "---\n",
+    "title: \"Optimal Group Project Assignment\"\n",
+    "date: 2025-07-31\n",
+    "format: html\n",
+    "categories:\n",
+    "- optimization\n",
+    "draft: false\n",
+    "jupyter: python3\n",
+    "---\n",
+    "\n",
+    "My senior design project was essentially randomly assigned. \n",
+    "\n",
+    "The professor gave us a list of potential projects and told us to group up and rank our top five. When we got our assignments, I was a bit disappointed and confused because I got a project that I did not list on my preferences (something to do with measuring strain using digital image correlation). Stranger still, there had been other people that wanted our project. The professor said that the decisions were final. When asked, he said he ran a monte carlo simulation and picked the one that looked the best. We're not exactly sure what criteria he used, but the result was that many students were suboptimally assigned.\n",
+    "\n",
+    "Years later, I sometimes think of this, and having TA'd some courses with group projects, I wondered if there was a better way. The following is an approach that uses integer programming.\n",
+    "\n",
+    "Say you have $N$ students and $M$ projects. The goal is to group students to the projects they want in a way that optimizes for some sort of preference. For now, let's say every student provides a dissatisfaction score $d_{n,m} \\in [0, \\infty)$ for each project. Each student then has a vector $d_n \\in \\mathbb R^M$, and the entire class can be described using the following matrix.\n",
+    "$$\n",
+    "D = \\begin{bmatrix}\n",
+    "| & & | \\\\\n",
+    "d_{1} & \\cdots & d_{N} \\\\\n",
+    "| & & |\n",
+    "\\end{bmatrix}\n",
+    "$$\n",
+    "\n",
+    "Each student must be assigned to one project. This can be described using a 1-hot vector, $a_n\\in\\mathbb R^m$, where the 1 corresponds to the assigned project. Again, the entire class can be assigned using a matrix. This will act as our decision variable.\n",
+    "$$\n",
+    "A = \\begin{bmatrix}\n",
+    "| & & | \\\\\n",
+    "a_{1} & \\cdots & a_{N} \\\\\n",
+    "| & & |\n",
+    "\\end{bmatrix}\n",
+    "$$\n",
+    "We can set maximum and minimum group sizes by specifying that the sum of the rows of $A$ must be between the bounds.\n",
+    "\n",
+    "For our objective, let's go with minimizing the total dissatisfaction of the class. This can be notated concisely as $\\min_A\\ \\text{Tr}(D^\\intercal A)$. We can run our optimization as follows."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "1714f0a9",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The most dissatisfaction a student has is 0.11/1.0\n"
+     ]
+    }
+   ],
+   "source": [
+    "import cvxpy as cp\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "np.random.seed(0)\n",
+    "\n",
+    "num_projects = 50\n",
+    "num_students = 200\n",
+    "\n",
+    "min_group_size = 3\n",
+    "max_group_size = 5\n",
+    "\n",
+    "dissatisfaction_matrix = np.random.rand(num_projects, num_students)\n",
+    "assignment_matrix = cp.Variable((num_projects, num_students), boolean=True)\n",
+    "\n",
+    "objective = cp.Minimize(cp.trace(dissatisfaction_matrix.T @ assignment_matrix))\n",
+    "\n",
+    "constraints = []\n",
+    "constraints += [cp.sum(assignment_matrix, axis=0) == 1]  # each student gets assigned to only 1 project\n",
+    "constraints += [cp.sum(assignment_matrix, axis=1) >= min_group_size]\n",
+    "constraints += [cp.sum(assignment_matrix, axis=1) <= max_group_size]\n",
+    "\n",
+    "problem = cp.Problem(objective, constraints)\n",
+    "problem.solve()\n",
+    "\n",
+    "student_dissatisfaction = np.diag(dissatisfaction_matrix.T @ assignment_matrix.value)\n",
+    "print(f\"The most dissatisfaction a student has is {np.max(student_dissatisfaction):.2f}/1.0\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6ded7649",
+   "metadata": {},
+   "source": [
+    "That's pretty good, but this doesn't yet solve our problem. It's unreasonable for a student to provide an absolute score for each project. Asking them to pick and rank their top five is much more reasonable. There are many ways you could map a list of five selections to dissatisfaction. One way is to assign constant values to the selections (say, 0 dissatisfaction for your top choice, 0.1 for your second, etc). Then, pick some large value for all omitted projects."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "8feeb1b9",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The most dissatisfaction a student has is 0.20/1.0\n"
+     ]
+    }
+   ],
+   "source": [
+    "num_ranks = 5\n",
+    "omit_cost = 10\n",
+    "\n",
+    "# generate rankings from some underlying absolute total ranking\n",
+    "absolute_rankings = np.random.rand(num_projects, num_students)\n",
+    "rankings = np.argsort(absolute_rankings, axis=0)\n",
+    "trunc_ranks = rankings[:num_ranks, :]\n",
+    "\n",
+    "dissatisfaction_matrix = np.zeros((num_projects, num_students)) + omit_cost\n",
+    "student_vec = np.arange(num_students)\n",
+    "for idx, rank in enumerate(trunc_ranks):\n",
+    "    dissatisfaction_matrix[rank, student_vec] = idx\n",
+    "dissatisfaction_matrix /= omit_cost # normalize\n",
+    "\n",
+    "objective = cp.Minimize(cp.trace(dissatisfaction_matrix.T @ assignment_matrix))\n",
+    "\n",
+    "problem = cp.Problem(objective, constraints)\n",
+    "problem.solve()\n",
+    "\n",
+    "student_dissatisfaction = np.diag(dissatisfaction_matrix.T @ assignment_matrix.value)\n",
+    "print(f\"The most dissatisfaction a student has is {np.max(student_dissatisfaction):.2f}/1.0\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c211fbfb",
+   "metadata": {},
+   "source": [
+    "This still works. We know that no one was assigned a project they didn't like because the most dissatisfaction is less than 1. However, maybe we just got lucky. We're assigning uniformly random preferences for everyone, so it seems likely you'd be able to get everyone something that they like. \n",
+    "\n",
+    "Let's assume that the popularity of certain projects follows a sort of [Zipfian distribution](https://en.wikipedia.org/wiki/Zipf%27s_law). "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "cc12a147",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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cPXffffd536ekZEhkyZNkqVLl0qLFi3MwKBff/21qQIEAAAIRgUOVeXLl3c/r1q1qtx7773un2+44QYzAQAABKsCh6rc1X0AAACwME4VAAAAijmkwqVLlyQ+Pl62bNkip06dct8DUCUnJxdlkwAAAMFXUqVjUa1Zs0aGDx8up0+flqlTp0rFihVl3Lhx9vcQAACgrIaqd999V9577z155JFHTJjSRw1Zn332mf09BAAAKKuh6syZM9K2bVt3r8Ds7Gzp0qWL/O1vf7O9fwAAAGU3VDVq1Ei+++4787x58+by6aefyr59+yQ0tEhNtAAAAIIzVA0bNky2bdtmnms7qpiYGHPbmpEjR9rePwAAgFKhSEVLzzzzjPv5+PHjpUOHDua+f7fffrvNfQMAACg1ilVfp0MpnDx5Unr06CEhISH29iqIRc5Yn+/ypOf6+21fAABACVf/XbhwwZRQValSRRo3bmwetRpQ5wMAAASjIoWqhx9+WHbt2iXr1q0zDdT1cc+ePWY+AABAMCpS9Z+OUaUhSnsBqtatW5t2VTq9+uqrtvcRAACgbJZUVa5cWcLDw73mhYWFmfkAAADBqEih6rHHHpNJkybJ+fPnzc9paWlmVPXp06fb3j8AAICyVf3XtGlTrx5+//73v2X58uWmxEpHWFdaHfjQQw+VzJ4CAACUhVA1d+7ckt0TAACAYAhVo0aNKtk9AQAACMbBP7///ntZuXKlJCcnS7NmzWT48OFmzCoAAIBgVKSG6l988YW0adNGVq1aJT/88IOsXr1a2rZta+YDAAAEo9Ci9v6bPXu2TJ061T1v4cKFMm3aNNm+fbvN/QMAACi7JVV79+69YvT0yZMnm/kAAADBqEihqlatWnL8+HGveSdOnJCaNWva2i8AAICyH6qGDh0qd911l3zwwQfm3n/vv/++DBo0SH7zm98UeBuO40hcXJxERERItWrVpE+fPvmWdM2aNUs6d+4sFStWlF69evlc56233jJtvfQGz9rG65133inKxwMAAPBPqJozZ44JQRqi2rdvbx579uxp5hfU/PnzJTExUTZv3iynT582r4+NjXWP0p5bVFSU2f64ceN8Lv/8889lxIgRMm/ePElNTTXjammPxC+//LIoHxEAAKBkQ1VWVpa8++678sILL5gAdPLkSblw4YK89NJLUqlSpQJvJyEhwTRsj46O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",
+      "text/plain": [
+       "<Figure size 672x480 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "def zipf_pmf(k, N):\n",
+    "    \"\"\"Return the value of a Zipf probability mass function\"\"\"\n",
+    "    return 1 / k * 1 / np.sum(1 / np.arange(1, num_projects + 1))\n",
+    "\n",
+    "project_probabilities = zipf_pmf(np.arange(1, num_projects + 1), num_projects)\n",
+    "fig, ax = plt.subplots()\n",
+    "ax.bar(np.arange(num_projects), project_probabilities)\n",
+    "ax.set_ylabel(\"Probability\")\n",
+    "ax.set_xlabel(\"Project Index\")\n",
+    "_ = ax.set_title(\"Probability of Picking a Project\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "09cdc642",
+   "metadata": {},
+   "source": [
+    "We'll assume that students populate their preference list by picking from this distribution without replacement. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "86d8002b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "trunc_ranks = []\n",
+    "for _ in range(num_students):\n",
+    "    trunc_ranks.append(np.random.choice(np.arange(num_projects), 5, replace=False, p=project_probabilities))\n",
+    "\n",
+    "trunc_ranks = np.asarray(trunc_ranks).T"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "489bad7b",
+   "metadata": {},
+   "source": [
+    "Now we can solve as before."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "54b156bb",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The most dissatisfaction a student has is 0.40/1.0\n"
+     ]
+    }
+   ],
+   "source": [
+    "dissatisfaction_matrix = np.zeros((num_projects, num_students)) + omit_cost\n",
+    "student_vec = np.arange(num_students)\n",
+    "for idx, rank in enumerate(trunc_ranks):\n",
+    "    dissatisfaction_matrix[rank, student_vec] = idx\n",
+    "dissatisfaction_matrix /= omit_cost # normalize\n",
+    "\n",
+    "objective = cp.Minimize(cp.trace(dissatisfaction_matrix.T @ assignment_matrix))\n",
+    "\n",
+    "problem = cp.Problem(objective, constraints)\n",
+    "problem.solve()\n",
+    "\n",
+    "student_dissatisfaction = np.diag(dissatisfaction_matrix.T @ assignment_matrix.value)\n",
+    "print(f\"The most dissatisfaction a student has is {np.max(student_dissatisfaction):.2f}/1.0\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2bc39a50",
+   "metadata": {},
+   "source": [
+    "As expected, the worst case dissatisfaction did go up. But, you know what I can't get over?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "72463dea",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Number of students that didn't get anything on their list: 0.\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"Number of students that didn't get anything on their list: {np.sum(student_dissatisfaction == 1)}.\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3ba155dd",
+   "metadata": {},
+   "source": [
+    "<!-- REFERENCES -->\n",
+    "<!-- ::: {#refs}\n",
+    "## References\n",
+    "::: -->\n",
+    "<!-- --- -->\n",
+    "\n",
+    "<!-- EDIT HISTORY -->\n",
+    "<!-- ::: {.callout-note}\n",
+    "## Edit History\n",
+    "\n",
+    "- **2025-07-31**: Reformatted for new site\n",
+    "::: -->\n",
+    "\n",
+    "---\n",
+    "\n",
+    "<!-- COMMENTS/REACTIONS -->"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3",
+   "path": "C:\\Users\\Alex\\Nextcloud\\personal\\blog\\venvWin\\share\\jupyter\\kernels\\python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

@@ -6,7 +6,7 @@ format: html
 categories:
 - signal processing
 draft: false
-bibliography: ref.bibtex
+bibliography: head_related_tfs/ref.bibtex
 ---
 
 I made a script to make regular audio sound 3D
@@ -23,7 +23,7 @@ More recently (during Covid boredom) I wanted to look more deeply into how this 
 
 Often the explanation people give is that this is an example of “binaural audio” where microphones are placed inside a dummy head (like the one pictured below) so that the differences heard between the left and right ear are interpreted as directions.
 
-![](figs/binaural_mic.png){width=50% fig-align="center"}
+![](head_related_tfs/figs/binaural_mic.png){width=50% fig-align="center"}
 
 This certainly plays a part but is not the whole story. The problem with that explanation is that it doesn’t explain why you can tell when a sound comes from above or below you. In those cases, the sounds entering your left and right ear could be the exact same yet you can still localize the sound in the correct direction. The same goes for when a sound is directly in front or behind you. Simply adding delay to one side or the other is not sufficient to encode all of the spatial data.
 
@@ -33,7 +33,7 @@ These Head Related Transfer Functions (HRTFs) can be modeled and measured. In fa
 
 These impulse responses are generally collected over the surface of multiple spheres at many distances from the listener. 
 
-![](figs/hrif_distribution.png){width=50% fig-align="center"}
+![](head_related_tfs/figs/hrif_distribution.png){width=50% fig-align="center"}
 
 Below is an example implementation I made using @Bernschutz2013. The code can be found on my github page [here](https://github.com/aechoi/hrtfmixer).
 
@@ -41,7 +41,7 @@ Below is an example implementation I made using @Bernschutz2013. The code can be
 
 In it, I use a method found in @Gamper2013 to search for and interpolate the HRIRs. The method involves triangulating (tetrating?) the space using Delaunay triangulation. Then, given some starting tetrahedron, determine which vertex is furthest from the desired point in space. The tetrahedron that shares the face opposite that vertex is then the next nearest of the neighboring tetrahedrons. This process is continued until the desired point lies within the current tetrahedron.
 
-![](figs/tet_search.png){fig-align="center" width=50%}
+![](head_related_tfs/figs/tet_search.png){fig-align="center" width=50%}
 
 Once found, the HRIRs at the vertices of that tetrahedron can be interpolated together using barycentric interpolation, providing a smooth transition when the point moves across the space to other tetrahedrons. The audio can now be convolved with the appropriate HRIR.
 
