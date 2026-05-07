@@ -2,14 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-08-17">
+<meta name="dcterms.date" content="2025-08-16">
 
 <title>Interactive Phasors – alex choi</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -72,10 +75,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-b18ea123664ff360e15090714624b84a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-c2b7e462633a1e870de0c66da70bc37e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -113,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -126,7 +129,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -223,7 +226,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 17, 2025</p>
+      <p class="date">August 16, 2025</p>
     </div>
   </div>
   
@@ -246,7 +249,7 @@ s(t, x) = M \cos(\omega t - k x + \phi)
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1" data-startfrom="0" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line -1;"><span id="cb1-0"><a href="#cb1-0" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> {slider} <span class="im">from</span> <span class="st">"@jashkenas/inputs"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" data-startfrom="0" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line -1;"><span id="cb1-0"><a href="#cb1-0" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> {slider} <span class="im">from</span> <span class="st">"@jashkenas/inputs"</span></span>
 <span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> {Scrubber} <span class="im">from</span> <span class="st">"@mbostock/scrubber"</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>fps <span class="op">=</span> <span class="dv">20</span></span>
@@ -382,7 +385,7 @@ s(t, x) = M \cos(\omega t - k x + \phi)
 <span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;h3&gt; Space Domain</span></span>
 <span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>space_plot<span class="sc">}</span></span>
 <span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;</span><span class="sc">\d</span><span class="vs">iv&gt;`</span></span>
-<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -513,7 +516,7 @@ s(t, x) = M_1 \cos(\omega_1 t - k_1 x + \phi_1) + M_2 \cos(\omega_2 t - k_2 x + 
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2" data-startfrom="1" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>time_duration_diffo_diffk <span class="op">=</span> <span class="dv">10</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" data-startfrom="1" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>time_duration_diffo_diffk <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>space_dist_diffo_diffk <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>space_array_diffo_diffk <span class="op">=</span> d3<span class="op">.</span><span class="fu">ticks</span>(<span class="dv">0</span><span class="op">,</span> space_dist_diffo_diffk<span class="op">,</span> space_dist_diffo_diffk<span class="op">*</span>fps)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -699,7 +702,7 @@ s(t, x) = M_1 \cos(\omega_1 t - k_1 x + \phi_1) + M_2 \cos(\omega_2 t - k_2 x + 
 <span id="cb2-184"><a href="#cb2-184" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;h3&gt; Space Domain</span></span>
 <span id="cb2-185"><a href="#cb2-185" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>space_plot<span class="sc">}</span></span>
 <span id="cb2-186"><a href="#cb2-186" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;</span><span class="sc">\d</span><span class="vs">iv&gt;`</span></span>
-<span id="cb2-187"><a href="#cb2-187" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-187"><a href="#cb2-187" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -844,7 +847,7 @@ s(t, x) = M \cos{(\omega t - k x + \phi)} + M |\Gamma| \cos{(\omega  \Omega t - 
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3" data-startfrom="1" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>time_duration_rel <span class="op">=</span> <span class="dv">10</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-startfrom="1" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>time_duration_rel <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>space_dist_rel <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>space_array_rel <span class="op">=</span> d3<span class="op">.</span><span class="fu">ticks</span>(<span class="dv">0</span><span class="op">,</span> space_dist_rel<span class="op">,</span> space_dist_rel<span class="op">*</span>fps)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1030,7 +1033,7 @@ s(t, x) = M \cos{(\omega t - k x + \phi)} + M |\Gamma| \cos{(\omega  \Omega t - 
 <span id="cb3-184"><a href="#cb3-184" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;h3&gt; Space Domain</span></span>
 <span id="cb3-185"><a href="#cb3-185" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>space_plot<span class="sc">}</span></span>
 <span id="cb3-186"><a href="#cb3-186" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;</span><span class="sc">\d</span><span class="vs">iv&gt;`</span></span>
-<span id="cb3-187"><a href="#cb3-187" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-187"><a href="#cb3-187" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1236,13 +1239,14 @@ window._ojs.runtime.interpretFromScriptTags();
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,6 +10,9 @@
 
 <title>Optimal Group Project Assignment – alex choi</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -72,10 +75,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-b18ea123664ff360e15090714624b84a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-c2b7e462633a1e870de0c66da70bc37e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -105,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -118,7 +121,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -237,10 +240,10 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 \end{bmatrix}
 \]</span> We can set maximum and minimum group sizes by specifying that the sum of the rows of <span class="math inline">\(A\)</span> must be between the bounds.</p>
 <p>For our objective, let’s go with minimizing the total dissatisfaction of the class. This can be notated concisely as <span class="math inline">\(\min_A\ \text{Tr}(D^\intercal A)\)</span>. We can run our optimization as follows.</p>
-<div id="8c12dfbc" class="cell" data-execution_count="1">
+<div id="70c3776c" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -266,17 +269,17 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>problem.solve()</span>
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>student_dissatisfaction <span class="op">=</span> np.diag(dissatisfaction_matrix.T <span class="op">@</span> assignment_matrix.value)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The most dissatisfaction a student has is </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">max</span>(student_dissatisfaction)<span class="sc">:.2f}</span><span class="ss">/1.0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The most dissatisfaction a student has is </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">max</span>(student_dissatisfaction)<span class="sc">:.2f}</span><span class="ss">/1.0"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>The most dissatisfaction a student has is 0.11/1.0</code></pre>
 </div>
 </div>
 <p>That’s pretty good, but this doesn’t yet solve our problem. It’s unreasonable for a student to provide an absolute score for each project. Asking them to pick and rank their top five is much more reasonable. There are many ways you could map a list of five selections to dissatisfaction. One way is to assign constant values to the selections (say, 0 dissatisfaction for your top choice, 0.1 for your second, etc). Then, pick some large value for all omitted projects.</p>
-<div id="994bb71f" class="cell" data-execution_count="2">
+<div id="cea663b2" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>num_ranks <span class="op">=</span> <span class="dv">5</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>num_ranks <span class="op">=</span> <span class="dv">5</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>omit_cost <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># generate rankings from some underlying absolute total ranking</span></span>
@@ -296,7 +299,7 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>problem.solve()</span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>student_dissatisfaction <span class="op">=</span> np.diag(dissatisfaction_matrix.T <span class="op">@</span> assignment_matrix.value)</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The most dissatisfaction a student has is </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">max</span>(student_dissatisfaction)<span class="sc">:.2f}</span><span class="ss">/1.0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The most dissatisfaction a student has is </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">max</span>(student_dissatisfaction)<span class="sc">:.2f}</span><span class="ss">/1.0"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>The most dissatisfaction a student has is 0.20/1.0</code></pre>
@@ -304,10 +307,10 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 </div>
 <p>This still works. We know that no one was assigned a project they didn’t like because the most dissatisfaction is less than 1. However, maybe we just got lucky. We’re assigning uniformly random preferences for everyone, so it seems likely you’d be able to get everyone something that they like.</p>
 <p>Let’s assume that the popularity of certain projects follows a sort of <a href="https://en.wikipedia.org/wiki/Zipf%27s_law">Zipfian distribution</a>.</p>
-<div id="a72b7285" class="cell" data-execution_count="3">
+<div id="01531dd7" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> zipf_pmf(k, N):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> zipf_pmf(k, N):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return the value of a Zipf probability mass function"""</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> k <span class="op">*</span> <span class="dv">1</span> <span class="op">/</span> np.<span class="bu">sum</span>(<span class="dv">1</span> <span class="op">/</span> np.arange(<span class="dv">1</span>, num_projects <span class="op">+</span> <span class="dv">1</span>))</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -316,32 +319,32 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>ax.bar(np.arange(num_projects), project_probabilities)</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Probability"</span>)</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Project Index"</span>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.set_title(<span class="st">"Probability of Picking a Project"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.set_title(<span class="st">"Probability of Picking a Project"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="optimal_groups_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="optimal_groups_files/figure-html/cell-4-output-1.png" width="597" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>We’ll assume that students populate their preference list by picking from this distribution without replacement.</p>
-<div id="dba118c5" class="cell" data-execution_count="4">
+<div id="71790c54" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>trunc_ranks <span class="op">=</span> []</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>trunc_ranks <span class="op">=</span> []</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_students):</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    trunc_ranks.append(np.random.choice(np.arange(num_projects), <span class="dv">5</span>, replace<span class="op">=</span><span class="va">False</span>, p<span class="op">=</span>project_probabilities))</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>trunc_ranks <span class="op">=</span> np.asarray(trunc_ranks).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>trunc_ranks <span class="op">=</span> np.asarray(trunc_ranks).T</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Now we can solve as before.</p>
-<div id="7d15bce0" class="cell" data-execution_count="5">
+<div id="125cd87a" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dissatisfaction_matrix <span class="op">=</span> np.zeros((num_projects, num_students)) <span class="op">+</span> omit_cost</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dissatisfaction_matrix <span class="op">=</span> np.zeros((num_projects, num_students)) <span class="op">+</span> omit_cost</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>student_vec <span class="op">=</span> np.arange(num_students)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, rank <span class="kw">in</span> <span class="bu">enumerate</span>(trunc_ranks):</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    dissatisfaction_matrix[rank, student_vec] <span class="op">=</span> idx</span>
@@ -353,17 +356,17 @@ a_{1} &amp; \cdots &amp; a_{N} \\
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>problem.solve()</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>student_dissatisfaction <span class="op">=</span> np.diag(dissatisfaction_matrix.T <span class="op">@</span> assignment_matrix.value)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The most dissatisfaction a student has is </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">max</span>(student_dissatisfaction)<span class="sc">:.2f}</span><span class="ss">/1.0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The most dissatisfaction a student has is </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">max</span>(student_dissatisfaction)<span class="sc">:.2f}</span><span class="ss">/1.0"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>The most dissatisfaction a student has is 0.40/1.0</code></pre>
 </div>
 </div>
 <p>As expected, the worst case dissatisfaction did go up. But, you know what I can’t get over?</p>
-<div id="60c9666e" class="cell" data-execution_count="6">
+<div id="71b53a0d" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of students that didn't get anything on their list: </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">sum</span>(student_dissatisfaction <span class="op">==</span> <span class="dv">1</span>)<span class="sc">}</span><span class="ss">."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of students that didn't get anything on their list: </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">sum</span>(student_dissatisfaction <span class="op">==</span> <span class="dv">1</span>)<span class="sc">}</span><span class="ss">."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Number of students that didn't get anything on their list: 0.</code></pre>
@@ -437,13 +440,14 @@ a_{1} &amp; \cdots &amp; a_{N} \\
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
