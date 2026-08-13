@@ -216,3 +216,5 @@ _publish/
 .Ruserdata
 
 /.quarto/
+
+**/*.quarto_ipynb

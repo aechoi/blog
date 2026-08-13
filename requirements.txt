@@ -4,3 +4,7 @@ cvxpy
 matplotlib
 ipympl
 pandas
+casadi
+jupyter
+ipykernel
+nltk

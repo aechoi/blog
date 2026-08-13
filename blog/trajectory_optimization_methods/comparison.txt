@@ -1,0 +1,14 @@
+Direct Collocation
+- trying to find a continuous time solution by 
+1. breaking it up into collocation points
+2. Using some approximation technique (trapezoids, polynomials, Simpson integration) to approximate the traj between collocation points that is finitely parameterizable
+
+- is there a discrete Equivalent?
+
+Direct Shooting
+
+Direct Multiple Shooting
+
+Pseudospectral Methods
+
+Indirect Methods (calculus of variations, Hamiltonians)

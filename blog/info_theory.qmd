@@ -1,0 +1,33 @@
+---
+title: Dogs doing things to banks on the river
+listing: false
+format: html
+---
+
+There's a particular river from where I grew up. It was famous locally for being a popular hang out spot for dogs. The dogs would do things to the banks that were on the river. In one famous case, the dogs ate banks on the river. 
+
+This isn't the only thing the dogs would do. The dogs drank banks on the river and the dogs gulped banks on the river. The dogs would do any number of things to the banks on the river. Here's a list that is not comprehensive:
+
+```{python}
+#| echo: false
+#| output: asis
+with open("info_theory/past_tense_verbs.txt") as f:
+    for line in f:
+        print(f"- {line.strip()}")
+```
+
+The funny thing is, they did something different every day. Those crazy, high energy, high entropy dogs. Who knows what they'll do next?
+
+<!-- REFERENCES -->
+<!-- ::: {#refs}
+## References
+::: -->
+---
+
+<!-- EDIT HISTORY -->
+::: {.callout-note}
+## Edit History
+
+:::
+
+---

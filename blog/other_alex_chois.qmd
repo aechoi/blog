@@ -1,0 +1,38 @@
+---
+title: TEMPLATE
+date: today
+# date-modified: 2025-07-31
+categories:
+- template
+# bibliography: ref.bibtex
+draft: true
+---
+
+<!-- BODY -->
+Youtube car guy
+Business Lawfirm LA https://www.safarianchoi.com/alex-choi
+New York photographer/videographer https://www.choiboiproductions.com/
+London software engineer https://alexchoi.xyz/ https://www.linkedin.com/in/alexchoi1
+HSBC asset manager? https://www.linkedin.com/in/alexchoi/
+Indianapolis state senator candidate https://votealexchoi.com/
+Crypto guy https://www.youtube.com/@AlexChoiCrypto https://www.fortunecollective.org/about
+Hong kong designer http://alexchoi.com.hk/en/
+
+
+
+<!-- REFERENCES -->
+::: {#refs}
+## References
+:::
+---
+
+<!-- EDIT HISTORY -->
+::: {.callout-note}
+## Edit History
+
+- **20YY-MM-DD**: EDIT NOTE
+:::
+
+---
+
+<!-- COMMENTS/REACTIONS -->

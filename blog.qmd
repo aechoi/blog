@@ -5,6 +5,8 @@ listing:
   sort: "date desc"
   type: default
   categories: true
+  exclude:
+    listing: false
 ---
 
 Welcome to my blog! Here are recent posts:
