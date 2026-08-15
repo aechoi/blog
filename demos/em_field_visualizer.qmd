@@ -1,6 +1,6 @@
 ---
 title: "Electromagnetic Field Visualizer"
-date: today
+date: 2026-08-13
 categories:
 - electrodynamics
 draft: false
