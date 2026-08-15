@@ -6,6 +6,7 @@
   {
     "listing": "/demos.html",
     "items": [
+      "/demos/hrtf_spatializer.html",
       "/demos/em_field_visualizer.html",
       "/demos/interactive_phasors.html"
     ]
