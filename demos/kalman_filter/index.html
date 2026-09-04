@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kalman Filter Step</title>
+  <style>
+    /* Pins native form controls to this app's own light palette
+       regardless of the viewer's OS dark-mode preference — same reason
+       the HRTF demo does it: unstyled <select>s otherwise render dark
+       and clash with everything, most visibly in fullscreen. */
+    :root {
+      color-scheme: light;
+    }
+    html:fullscreen,
+    html:-webkit-full-screen {
+      background: #fff;
+    }
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 1500px;
+      margin: 0.75rem auto;
+      color: #222;
+      background: #fff;
+      padding: 0 1rem;
+    }
+    #fullscreenBtn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+      width: 32px;
+      height: 32px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #ffffffd9;
+      color: #222;
+      font-size: 15px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    #fullscreenBtn:hover {
+      background: #fff;
+    }
+    fieldset {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      margin: 0 0 1rem;
+      padding: 0.75rem 1rem 1rem;
+    }
+    legend {
+      font-weight: 600;
+      font-size: 0.8em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #777;
+      padding: 0 0.35rem;
+    }
+    .io-row {
+      display: flex;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .io-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .io-item > label {
+      font-size: 0.85em;
+      color: #333;
+    }
+    .io-item.inline {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.4rem;
+      padding-bottom: 0.3rem;
+    }
+    select,
+    button {
+      font: inherit;
+      font-size: 0.9em;
+      color: #222;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 0.3rem 0.55rem;
+    }
+    button {
+      cursor: pointer;
+    }
+    button:hover {
+      background: #f4f4f4;
+    }
+    button.primary {
+      background: #2a78d6;
+      border-color: #2a78d6;
+      color: #fff;
+    }
+    button.primary:hover {
+      background: #1f66bd;
+    }
+    .mode-toggle {
+      display: inline-flex;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .mode-toggle button {
+      border: none;
+      border-radius: 0;
+      background: #fff;
+      padding: 0.3rem 0.65rem;
+      font-size: 0.8rem;
+      color: #555;
+    }
+    .mode-toggle button:not(:last-child) {
+      border-right: 1px solid #ccc;
+    }
+    .mode-toggle button.active {
+      background: #2a78d6;
+      color: #fff;
+    }
+    button:disabled {
+      color: #aaa;
+      border-color: #e0e0e0;
+      cursor: default;
+    }
+    button:disabled:hover {
+      background: #fff;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 272px;
+      gap: 1rem;
+      align-items: start;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #fff;
+      touch-action: none;
+    }
+    #stateCanvas {
+      height: 520px;
+    }
+    .side {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .panel-heading {
+      font-weight: 600;
+      font-size: 0.78em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #777;
+      margin: 0 0 0.3rem;
+    }
+    .panel-sub {
+      color: #666;
+      font-size: 0.78em;
+      margin: 0.35rem 0 0;
+    }
+    #qCanvas,
+    #rCanvas {
+      height: 210px;
+    }
+    #readout {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 0.6rem 0.7rem;
+    }
+    .ro-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+    .ro-item span {
+      font-size: 0.74em;
+      color: #888;
+    }
+    .ro-item pre {
+      margin: 0;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      font-variant-numeric: tabular-nums;
+      color: #333;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 0.5rem;
+      margin-top: 0.7rem;
+    }
+    /* Legend entries are buttons: clicking one switches that group off
+       and on in the plot above. They keep the flat look of a legend
+       rather than reading as a toolbar. */
+    .legend button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font: inherit;
+      font-size: 0.82em;
+      color: #555;
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      padding: 0.15rem 0.4rem;
+      cursor: pointer;
+    }
+    .legend button:hover {
+      background: #f2f2f2;
+      border-color: #e2e2e2;
+    }
+    .legend button.off {
+      color: #b6b6b6;
+    }
+    .legend button.off .swatch {
+      opacity: 0.25;
+    }
+    .swatch {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      flex: none;
+    }
+
+    @media (max-width: 860px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      #stateCanvas {
+        height: 460px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button id="fullscreenBtn" title="Fullscreen" aria-label="Fullscreen">⛶</button>
+
+
+  <fieldset>
+    <legend>setup</legend>
+    <div class="io-row">
+      <div class="io-item">
+        <label for="stageToggle">stage</label>
+        <div class="mode-toggle" id="stageToggle"></div>
+      </div>
+      <div class="io-item">
+        <label for="modelSelect">dynamics ẋ = F x</label>
+        <select id="modelSelect"></select>
+      </div>
+      <div class="io-item inline">
+        <button type="button" id="stepBackBtn">◂ Step back</button>
+        <button type="button" class="primary" id="stepBtn">Step forward ▸</button>
+        <button type="button" id="resampleBtn">Resample noise</button>
+        <button type="button" id="resetBtn">Reset</button>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="layout">
+    <div>
+      <p class="panel-heading">state space</p>
+      <canvas id="stateCanvas"></canvas>
+      <div class="legend" id="legend"></div>
+    </div>
+
+    <div class="side">
+      <div>
+        <p class="panel-heading">process noise Q</p>
+        <canvas id="qCanvas"></canvas>
+        <p class="panel-sub">Noise affecting the dynamics. Same as the purple ellipse in the state plot.</p>
+      </div>
+      <div>
+        <p class="panel-heading">measurement noise R</p>
+        <canvas id="rCanvas"></canvas>
+        <p class="panel-sub">Noise affecting the measurement. Same as the orange ellipse in the state plot.</p>
+      </div>
+      <div id="readout"></div>
+    </div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
