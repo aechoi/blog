@@ -184,6 +184,14 @@ export function createNoiseView(canvas, { store, which, scale }) {
         invalidate();
       }
     },
+    // The touch equivalent of the wheel below, and subject to the same
+    // constraint: the panel is locked to the origin, so a pinch changes
+    // only the scale. The midpoint is deliberately ignored -- following
+    // it would slide the mean of the distribution off a panel that
+    // exists to show the spread around it.
+    onPinch({ factor }) {
+      scale.zoomBy(1 / factor);
+    },
   });
 
   function frame() {

@@ -23,32 +23,32 @@ import { labelsFor } from "./labels.js";
 export const GROUPS = [
   {
     id: "truth0",
-    label: (k) => `${labelsFor(k).x0} initial state`,
+    label: (k, linear) => `${labelsFor(k, linear).x0} initial state`,
     color: COLORS.truthPrev,
     members: ["x0"],
   },
   {
     id: "flowed",
-    label: (k) => `${labelsFor(k).flowed} noiseless`,
+    label: (k, linear) => `${labelsFor(k, linear).flowed} noiseless`,
     color: COLORS.truthFlowed,
     members: ["flowed"],
   },
   {
     id: "process",
-    label: (k) => `Q, ${labelsFor(k).w} process noise`,
+    label: (k, linear) => `Q, ${labelsFor(k, linear).w} process noise`,
     color: COLORS.process,
     members: ["Q"],
   },
   {
     id: "truth1",
-    label: (k) => `${labelsFor(k).x1} new state`,
+    label: (k, linear) => `${labelsFor(k, linear).x1} new state`,
     color: COLORS.truthNow,
     members: ["x1"],
   },
   {
     id: "measurement",
-    label: (k) => {
-      const l = labelsFor(k);
+    label: (k, linear) => {
+      const l = labelsFor(k, linear);
       return `${l.z}, R, ${l.v} measurement`;
     },
     color: COLORS.measurement,
@@ -56,17 +56,27 @@ export const GROUPS = [
   },
   {
     id: "prior",
-    label: (k) => {
-      const l = labelsFor(k);
+    label: (k, linear) => {
+      const l = labelsFor(k, linear);
       return `${l.xhat0}, ${l.P0} prior`;
     },
     color: COLORS.prior,
     members: ["xhat0", "P0"],
   },
   {
+    // Present only while the UKF is selected -- see SIGMA_GROUP below.
+    // It is a group like any other so that it can be switched off:
+    // the sigma points are the most cluttering thing on the plot, and
+    // the ellipse they produce is often what you actually want to read.
+    id: "sigma",
+    label: (k, linear) => `${labelsFor(k, linear).sigma} sigma points`,
+    color: COLORS.predicted,
+    members: ["sigma", "sigmaPred"],
+  },
+  {
     id: "predicted",
-    label: (k) => {
-      const l = labelsFor(k);
+    label: (k, linear) => {
+      const l = labelsFor(k, linear);
       return `${l.xpred}, ${l.Ppred} predicted`;
     },
     color: COLORS.predicted,
@@ -74,8 +84,8 @@ export const GROUPS = [
   },
   {
     id: "posterior",
-    label: (k) => {
-      const l = labelsFor(k);
+    label: (k, linear) => {
+      const l = labelsFor(k, linear);
       return `${l.xpost}, ${l.Ppost} posterior`;
     },
     color: COLORS.posterior,
@@ -97,6 +107,16 @@ export const DERIVED = {
   "arrow:correct": (vis) => vis("xpred") && vis("xpost"),
   "arrow:innovation": (vis) => vis("xpred") && vis("z"),
 };
+
+// The one group that is not always applicable. The filter selector
+// decides whether it is offered at all, and the legend hides its switch
+// when it is not -- a control for something that cannot exist is worse
+// than no control.
+export const SIGMA_GROUP = "sigma";
+
+export function groupApplies(groupId, filterId) {
+  return groupId !== SIGMA_GROUP || filterId === "ukf";
+}
 
 // Element id -> group id, built once.
 const OWNER = new Map();
@@ -127,7 +147,7 @@ export function isVisible(elementId, visibleGroups) {
 // on screen, and a stage button lights up exactly when the current set
 // matches its preset.
 export const STAGE_PRESETS = {
-  predict: ["truth0", "flowed", "truth1", "prior", "process", "predicted"],
+  predict: ["truth0", "flowed", "truth1", "prior", "process", "sigma", "predicted"],
   update: ["truth1", "predicted", "measurement", "posterior"],
   complete: GROUPS.map((g) => g.id),
 };

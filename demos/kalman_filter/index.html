@@ -217,6 +217,13 @@
       padding: 0.15rem 0.4rem;
       cursor: pointer;
     }
+    /* [hidden] alone loses to the display above, which is a class
+       selector; the sigma-points entry is hidden whenever the running
+       filter has no sigma points, so it needs to actually disappear
+       rather than leave a blank swatch in the row. */
+    .legend button[hidden] {
+      display: none;
+    }
     .legend button:hover {
       background: #f2f2f2;
       border-color: #e2e2e2;
@@ -256,8 +263,12 @@
         <div class="mode-toggle" id="stageToggle"></div>
       </div>
       <div class="io-item">
-        <label for="modelSelect">dynamics ẋ = F x</label>
+        <label for="modelSelect">dynamics ẋ = f(x)</label>
         <select id="modelSelect"></select>
+      </div>
+      <div class="io-item">
+        <label for="filterSelect">filter</label>
+        <select id="filterSelect"></select>
       </div>
       <div class="io-item inline">
         <button type="button" id="stepBackBtn">◂ Step back</button>

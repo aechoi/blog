@@ -19,12 +19,18 @@ export function sub(n) {
 
 // `k` is the number of committed steps: the cycle on screen runs from
 // state k to state k+1.
-export function labelsFor(k) {
+//
+// `linear` switches the name of the flow image. On a linear model the
+// transition really is a matrix and "A x" is the honest label; on a
+// curved one there is no A, and writing one would assert the very
+// approximation the nonlinear models exist to question. The flow map
+// gets its usual name there instead.
+export function labelsFor(k, linear = true) {
   const a = sub(k);
   const b = sub(k + 1);
   return {
     x0: `x${a}`,
-    flowed: `A x${a}`,
+    flowed: linear ? `A x${a}` : `φ(x${a})`,
     x1: `x${b}`,
     xhat0: `x̂${a}`,
     xpred: `x̂${b}⁻`,
@@ -35,6 +41,9 @@ export function labelsFor(k) {
     Ppost: `P${b}⁺`,
     Q: "Q",
     R: "R",
+    // The sigma set belongs to the prior it was drawn from.
+    sigma: `χ${a}`,
+    sigmaPred: `φ(χ${a})`,
     // The process noise acts on the transition out of step k; the
     // measurement noise belongs to the observation taken at k+1.
     w: `w${a}`,

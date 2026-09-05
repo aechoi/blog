@@ -1,4 +1,4 @@
-import { eigSym, matvec } from "../linalg.js";
+import { eigSym } from "../linalg.js";
 import {
   COLORS,
   syncCanvasSize,
@@ -17,6 +17,7 @@ import { attachDragger } from "./dragger.js";
 import { createParticleField } from "./fieldLayer.js";
 import { isVisible } from "./groups.js";
 import { labelsFor } from "./labels.js";
+import { SIGMA_SPREAD } from "../unscented.js";
 
 // The main phase-plane view. Because C = I, the measurement lives in
 // state space, so every quantity in the step is on one set of axes.
@@ -47,15 +48,40 @@ const DIM = 0.13; // opacity of everything currently switched off
 const ELLIPSE_HOVER_RADIUS = 9;
 const TRAIL_STEPS = 30; // committed steps drawn behind the current one
 
+// What the predict step did, in the words of the filter that did it.
+// This is the one caption that changes with the selector, and it is the
+// shortest honest statement of the difference between the three.
+//
+// The KF's entry depends on the model family because its meaning does:
+// on a linear flow it is exact, and on a curved one it is a single
+// linearization taken at the origin and then trusted everywhere.
+function predictCaption(filterId, linear) {
+  if (filterId === "ekf") {
+    return linear
+      ? "Derived: the prior pushed through the exact transition A."
+      : "Derived: the mean pushed through the real flow; only the covariance is linearized, at the mean.";
+  }
+  if (filterId === "ukf") {
+    return linear
+      ? "Derived: the weighted mean of the propagated sigma points — exact here, since the flow is linear."
+      : "Derived: the weighted mean of the propagated sigma points. No derivative is taken.";
+  }
+  return linear
+    ? "Derived: the prior pushed through the exact transition A."
+    : "Derived: the prior pushed through one A, linearized at the origin and never revisited.";
+}
+
 // Shown in the caption strip while hovering. Built per step so the
 // symbols match the ones drawn on the plot.
-function descriptionsFor(k) {
-  const l = labelsFor(k);
+function descriptionsFor(k, linear, filterId) {
+  const l = labelsFor(k, linear);
   return {
     x0: [`${l.x0}  initial true state`, "Drag it: the flow carries everything downstream with it."],
     flowed: [
       `${l.flowed}  noiseless step`,
-      "Where the dynamics alone would put the truth, before any process noise.",
+      linear
+        ? "Where the dynamics alone would put the truth, before any process noise."
+        : "Where the flow alone carries the truth in dt, before any process noise.",
     ],
     x1: [
       `${l.x1} = ${l.flowed} + ${l.w}  new true state`,
@@ -66,7 +92,10 @@ function descriptionsFor(k) {
       `Drag it to choose the measurement-noise draw ${l.v}.`,
     ],
     xhat0: [`${l.xhat0}  prior mean`, "Your estimate before this step. Drag it."],
-    xpred: [`${l.xpred} = A ${l.xhat0}  predicted mean`, "Derived: the prior pushed through the dynamics."],
+    xpred: [
+      `${l.xpred} = ${predictedMeanFormula(filterId, linear, l)}  predicted mean`,
+      predictCaption(filterId, linear),
+    ],
     xpost: [
       `${l.xpost}  posterior mean`,
       "Derived: the prediction corrected by K times the innovation.",
@@ -75,14 +104,38 @@ function descriptionsFor(k) {
     Q: ["Q  process noise covariance", `${l.x1} is drawn from this, centred at ${l.flowed}. Drag a handle.`],
     R: ["R  measurement noise covariance", `${l.z} is drawn from this, centred at ${l.x1}. Drag a handle.`],
     Ppred: [
-      `${l.Ppred} = A ${l.P0} Aᵀ + Q  predicted covariance`,
-      "Derived: the prior propagated, plus process noise.",
+      filterId === "ukf"
+        ? `${l.Ppred} = Σ wᵢ (φ(χᵢ) − ${l.xpred})(·)ᵀ + Q`
+        : `${l.Ppred} = A ${l.P0} Aᵀ + Q  predicted covariance`,
+      filterId === "ukf"
+        ? "Refitted to where the sigma points landed, plus process noise."
+        : filterId === "kf" && !linear
+          ? "Derived: the prior propagated through the origin's Jacobian, plus process noise."
+          : "Derived: the prior propagated through the Jacobian at the mean, plus process noise.",
+    ],
+    sigma: [
+      `${l.sigma}  sigma points`,
+      `Placed by ${l.P0} at ±${SIGMA_SPREAD.toFixed(2)}σ along its axes. Nothing is differentiated.`,
+    ],
+    sigmaPred: [
+      `${l.sigmaPred}  propagated sigma points`,
+      `Each point carried through the real flow. ${l.Ppred} is refitted to where they land.`,
     ],
     Ppost: [
       `${l.Ppost} = (I−K)${l.Ppred}(I−K)ᵀ + KRKᵀ`,
       "Derived: what the measurement leaves of the prediction.",
     ],
   };
+}
+
+// How the predicted mean was actually formed. The KF multiplies by its
+// one matrix whatever the model is, so it keeps "A x-hat" on a curved
+// flow too -- writing the flow map there would credit it with a
+// propagation it did not do.
+function predictedMeanFormula(filterId, linear, l) {
+  if (filterId === "kf" || linear) return `A ${l.xhat0}`;
+  if (filterId === "ukf") return `Σ wᵢ φ(χᵢ)`;
+  return `φ(${l.xhat0})`;
 }
 
 // Puts a contour's name at the topmost point of that contour.
@@ -157,8 +210,8 @@ export function createStateView(canvas, { store }) {
     return hovered?.focus ?? hovered?.id ?? null;
   }
 
-  function drawCaption(ctx, width, id, k) {
-    const entry = descriptionsFor(k)[id];
+  function drawCaption(ctx, width, id, k, linear, filterId) {
+    const entry = descriptionsFor(k, linear, filterId)[id];
     if (!entry) return;
     const [title, detail] = entry;
     ctx.save();
@@ -194,10 +247,11 @@ export function createStateView(canvas, { store }) {
 
     const s = store.state;
     const d = store.derived;
+    const model = store.model();
     const sigma = store.sigmaK();
     // Steps committed so far: the cycle on screen runs k -> k+1.
     const k = s.history.length;
-    const L = labelsFor(k);
+    const L = labelsFor(k, model.linear);
     const tf = createTransform(width, height, { center, halfSpan });
     const b = bounds(tf, width, height);
     const step = niceStep(halfSpan * 2);
@@ -221,7 +275,12 @@ export function createStateView(canvas, { store }) {
     });
     ctx.globalAlpha = 1;
 
-    const flowed = matvec(d.A, s.xTrue); // A x0, before the process noise kick
+    // Where the flow alone takes the truth, before the process-noise
+    // kick. Taken from the solve rather than recomputed here: on a
+    // curved model there is no matrix to multiply by, and a second
+    // derivation would be a second chance to disagree with the one the
+    // filter actually used.
+    const flowed = d.flowed;
     const pHat0 = tf.toScreen(s.xHat);
     const pTrue0 = tf.toScreen(s.xTrue);
     const pFlowed = tf.toScreen(flowed);
@@ -260,6 +319,48 @@ export function createStateView(canvas, { store }) {
       });
     }
     ctx.globalAlpha = 1;
+
+    // --- the sigma points, when the UKF is running ----------------------
+    //
+    // The whole argument of the UKF is visible here and nowhere else:
+    // five points placed on the prior, each carried through the REAL
+    // flow, and the predicted ellipse refitted to where they land. On a
+    // curved flow the images stop being an affine image of the original
+    // five -- they bend -- and the gap between that bend and the ellipse
+    // drawn through them is precisely the approximation the UKF is still
+    // making.
+    //
+    // Each point is joined to its own image, because the set as a whole
+    // says nothing; what carries the idea is that THIS point went THERE.
+    const sigmaPts = [];
+    if (d.sigmaPrior && d.sigmaPred) {
+      ctx.globalAlpha = a("sigma");
+      ctx.save();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = COLORS.process + "55";
+      ctx.setLineDash([3, 3]);
+      for (let i = 0; i < d.sigmaPrior.length; i++) {
+        const from = tf.toScreen(d.sigmaPrior[i]);
+        const to = tf.toScreen(d.sigmaPred[i]);
+        ctx.beginPath();
+        ctx.moveTo(from[0], from[1]);
+        ctx.lineTo(to[0], to[1]);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // Coloured by which belief each end belongs to: the prior points
+      // are blue like the ellipse they were drawn from, their images
+      // crimson like the ellipse they go on to define. The centre point
+      // is drawn larger since it is the mean, not a spread point.
+      for (let i = 0; i < d.sigmaPrior.length; i++) {
+        const r = i === 0 ? 3.6 : 2.9;
+        drawPoint(ctx, tf.toScreen(d.sigmaPrior[i]), { color: COLORS.prior, r });
+        drawPoint(ctx, tf.toScreen(d.sigmaPred[i]), { color: COLORS.predicted, r });
+      }
+      sigmaPts.push(...d.sigmaPrior.map((q) => tf.toScreen(q)));
+      ctx.globalAlpha = 1;
+    }
 
     // --- the arrows that say what happened ------------------------------
     // Two chains, each marked with chevrons so a still frame reads in
@@ -366,7 +467,7 @@ export function createStateView(canvas, { store }) {
     ctx.globalAlpha = 1;
 
     const caption = captionId();
-    if (caption) drawCaption(ctx, width, caption, k);
+    if (caption) drawCaption(ctx, width, caption, k, model.linear, d.filterId);
 
     layout = {
       tf,
@@ -374,6 +475,11 @@ export function createStateView(canvas, { store }) {
       contours,
       handles,
       dots: Object.fromEntries(dots.map((x) => [x.id, x.p])),
+      // Hover targets only. They are computed by the filter, so there is
+      // nothing to grab -- but they are the least self-explanatory thing
+      // on the plot, so they had better be able to describe themselves.
+      sigma: sigmaPts,
+      sigmaPred: d.sigmaPred ? d.sigmaPred.map((q) => tf.toScreen(q)) : [],
     };
   }
 
@@ -407,6 +513,13 @@ export function createStateView(canvas, { store }) {
       );
     }
 
+    for (const [id, points] of [["sigma", layout.sigma], ["sigmaPred", layout.sigmaPred]]) {
+      if (!live(id)) continue;
+      points.forEach((p, i) =>
+        t.push({ id: `${id}${i}`, kind: "readonly", focus: id, hoverOnly: true, radius: 7, at: () => p }),
+      );
+    }
+
     // Dots last: with a small covariance the handles sit almost on top
     // of the centre, and grabbing the point is the more common intent,
     // so it should win the tie (see dragger.js).
@@ -429,8 +542,36 @@ export function createStateView(canvas, { store }) {
     const s = store.state;
     const d = store.derived;
     if (covId === "P0") return s.xHat;
-    if (covId === "Q") return matvec(d.A, s.xTrue);
+    if (covId === "Q") return d.flowed;
     return d.xTrueNext;
+  }
+
+  // Screen delta to world delta. Dragging right moves the content
+  // right, which means the window moved left, hence the signs.
+  function panBy(dx, dy) {
+    if (!layout) return;
+    const scale = layout.tf.scale;
+    center = [center[0] - dx / scale, center[1] + dy / scale];
+    invalidate();
+  }
+
+  // Zoom about a screen point rather than the centre of the canvas: pin
+  // whatever world point is under it and solve for the centre that
+  // keeps it there at the new scale. Zooming about the canvas centre
+  // instead would shove the thing you are pointing at off-screen, which
+  // matters much more now that the view pans and the interesting
+  // cluster is rarely centred.
+  //
+  // `factor` is how much BIGGER things get, so the span it maps to is
+  // the reciprocal. Clamped so one flick of a trackpad or one fast
+  // pinch cannot strand the view somewhere with nothing in it.
+  function zoomAbout([px, py], factor) {
+    const { width, height } = syncCanvasSize(canvas);
+    const anchor = createTransform(width, height, { center, halfSpan }).toWorld([px, py]);
+    halfSpan = Math.min(12, Math.max(0.35, halfSpan / factor));
+    const scale = Math.min(width, height) / (2 * halfSpan);
+    center = [anchor[0] - (px - width / 2) / scale, anchor[1] + (py - height / 2) / scale];
+    invalidate();
   }
 
   attachDragger(canvas, {
@@ -471,12 +612,14 @@ export function createStateView(canvas, { store }) {
         invalidate();
       }
     },
-    onBackgroundDrag(dx, dy) {
-      // Screen delta to world delta. Dragging right moves the content
-      // right, which means the window moved left, hence the signs.
-      const scale = layout.tf.scale;
-      center = [center[0] - dx / scale, center[1] + dy / scale];
-      invalidate();
+    onBackgroundDrag: panBy,
+    // Two fingers pan and zoom at once, which is the whole gesture on a
+    // phone: the midpoint's travel is the pan, its separation is the
+    // zoom, and both are applied about the midpoint so whatever sits
+    // between the fingers stays put under them.
+    onPinch({ factor, mid, dx, dy }) {
+      panBy(dx, dy);
+      zoomAbout(mid, factor);
     },
   });
 
@@ -484,22 +627,11 @@ export function createStateView(canvas, { store }) {
     "wheel",
     (e) => {
       e.preventDefault();
-      const { width, height } = syncCanvasSize(canvas);
       const rect = canvas.getBoundingClientRect();
-      const px = e.clientX - rect.left;
-      const py = e.clientY - rect.top;
-
-      // Zoom about the cursor rather than the centre of the canvas:
-      // pin whatever world point is under the pointer and solve for the
-      // centre that keeps it there at the new scale. Zooming about the
-      // canvas centre instead would shove the thing you are pointing at
-      // off-screen, which matters much more now that the view pans and
-      // the interesting cluster is rarely centred.
-      const anchor = createTransform(width, height, { center, halfSpan }).toWorld([px, py]);
-      halfSpan = Math.min(12, Math.max(0.35, halfSpan * Math.exp(e.deltaY * 0.0012)));
-      const scale = Math.min(width, height) / (2 * halfSpan);
-      center = [anchor[0] - (px - width / 2) / scale, anchor[1] + (py - height / 2) / scale];
-      invalidate();
+      // A wheel notch is a zoom about the cursor with no pan; a pinch is
+      // the same zoom about the midpoint of two fingers. Both go through
+      // zoomAbout so the mouse and the touch path cannot drift apart.
+      zoomAbout([e.clientX - rect.left, e.clientY - rect.top], Math.exp(-e.deltaY * 0.0012));
     },
     { passive: false },
   );
@@ -515,7 +647,7 @@ export function createStateView(canvas, { store }) {
     lastFrame = now;
     const { width, height } = syncCanvasSize(canvas);
     const tf = createTransform(width, height, { center, halfSpan });
-    particles.step(store.model().F, bounds(tf, width, height), dt);
+    particles.step(store.model(), bounds(tf, width, height), dt);
     draw();
     dirty = false;
     schedule();

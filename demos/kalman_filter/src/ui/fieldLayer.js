@@ -5,11 +5,11 @@ import { COLORS } from "./canvas.js";
 // the same continuous-time F the filter discretises, so the streaks are
 // the actual flow that A advances the state along.
 
-function rk4(F, p, h) {
-  const k1 = fieldAt(F, p[0], p[1]);
-  const k2 = fieldAt(F, p[0] + (h / 2) * k1[0], p[1] + (h / 2) * k1[1]);
-  const k3 = fieldAt(F, p[0] + (h / 2) * k2[0], p[1] + (h / 2) * k2[1]);
-  const k4 = fieldAt(F, p[0] + h * k3[0], p[1] + h * k3[1]);
+function rk4(model, p, h) {
+  const k1 = fieldAt(model, p[0], p[1]);
+  const k2 = fieldAt(model, p[0] + (h / 2) * k1[0], p[1] + (h / 2) * k1[1]);
+  const k3 = fieldAt(model, p[0] + (h / 2) * k2[0], p[1] + (h / 2) * k2[1]);
+  const k4 = fieldAt(model, p[0] + h * k3[0], p[1] + h * k3[1]);
   return [
     p[0] + (h / 6) * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]),
     p[1] + (h / 6) * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]),
@@ -90,7 +90,7 @@ export function createParticleField(count = Math.round(620 * (1 + 2 * SPAWN_MARG
     reset() {
       particles = [];
     },
-    step(F, bounds, dt) {
+    step(model, bounds, dt) {
       const spawnRegion = pad(bounds, SPAWN_MARGIN);
       const cullRegion = pad(bounds, CULL_MARGIN);
       if (particles.length !== count) {
@@ -102,7 +102,7 @@ export function createParticleField(count = Math.round(620 * (1 + 2 * SPAWN_MARG
       const h = Math.min(dt, 1 / 30);
       for (let i = 0; i < particles.length; i++) {
         const q = particles[i];
-        q.p = rk4(F, q.p, h);
+        q.p = rk4(model, q.p, h);
         q.trail.push(q.p);
         if (q.trail.length > TRAIL_LENGTH) q.trail.shift();
         q.age += h;

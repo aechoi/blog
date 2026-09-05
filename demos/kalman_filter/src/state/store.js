@@ -1,7 +1,7 @@
 import { solveStep } from "../kalman.js";
 import { modelById } from "../models.js";
 import { STAGE_PRESETS } from "../ui/groups.js";
-import { matvec, vadd, vsub, sampleGaussian, expm, symmetrize } from "../linalg.js";
+import { vadd, vsub, sampleGaussian, symmetrize } from "../linalg.js";
 
 // Every ellipse in the demo is a 1-sigma contour. This is a DISPLAY
 // choice only: it scales every ellipse and every drag handle together
@@ -19,6 +19,11 @@ const MAX_HISTORY = 500;
 
 const DEFAULTS = {
   modelId: "spiral-sink",
+  // Opens on the case where all three filters agree exactly, which is
+  // the right place to start from: it establishes that they are three
+  // answers to the same question before the nonlinear models make them
+  // disagree.
+  filterId: "kf",
   dt: 0.35,
   // Placed so that one full cycle -- x0, its flowed image, x1, z, and
   // all four ellipses -- sits inside the default view with the origin
@@ -45,6 +50,7 @@ export class FilterStore {
   constructor() {
     this.state = {
       modelId: DEFAULTS.modelId,
+      filterId: DEFAULTS.filterId,
       dt: DEFAULTS.dt,
       xTrue: [...DEFAULTS.xTrue],
       xHat: seedEstimate(DEFAULTS.xTrue, DEFAULTS.P),
@@ -113,10 +119,15 @@ export class FilterStore {
     return modelById(this.state.modelId);
   }
 
+  setFilter(filterId) {
+    this.update({ filterId });
+  }
+
   recompute() {
     const s = this.state;
     this.derived = solveStep({
-      F: this.model().F,
+      model: this.model(),
+      filterId: s.filterId,
       dt: s.dt,
       Q: s.Q,
       R: s.R,
@@ -146,8 +157,7 @@ export class FilterStore {
   // that would have put it there: w = x1 - A x0. The measurement rides
   // along, since v is unchanged and z = x1 + v.
   setTrueNext(point) {
-    const A = expm(this.model().F, this.state.dt);
-    this.update({ w: vsub(point, matvec(A, this.state.xTrue)) });
+    this.update({ w: vsub(point, this.derived.flowed) });
   }
 
   // Dragging the measurement chooses the measurement noise instead:
