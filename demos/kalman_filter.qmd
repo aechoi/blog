@@ -1,0 +1,36 @@
+---
+title: "Interactive Kalman Filter"
+date: 2026-09-03
+categories:
+- estimation
+- signal processing
+draft: false
+toc: false
+resources:
+- "kalman_filter/**"
+---
+
+Investigate each step and component of the Kalman Filter. The measurement model is the identity
+(**C = I**), so measurements can be depicted in the state space. A variety of dynamic models are
+available in the dropdown menu. Control is omitted for simplicity (**B = 0**).
+
+Models marked ◇ are nonlinear, where the flow bends and a Gaussian no longer stays Gaussian. The
+**filter** dropdown chooses how to cope with that: the **KF** linearizes once at the origin and
+trusts that everywhere, the **EKF** relinearizes at the current estimate on every step, and the
+**UKF** takes no derivative at all — it pushes five sigma points through the flow itself and
+refits a Gaussian to where they land. Those sigma points are drawn. On the linear models all three
+agree exactly, which is the point of starting there.
+
+**Solid** outlines and **filled** dots are things you can change; **dashed** outlines and **hollow**
+dots are derived by the filter. Drag a square handle to reshape a covariance, hover anything to see
+what it is, drag empty space to pan, scroll or pinch to zoom. The **stage** buttons highlight the
+predict or update step you are looking at, and the legend entries below the plot toggle any entity
+on its own. Every ellipse is a 1σ contour.
+
+::: {.column-screen-inset}
+<div style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; margin: 0 auto; max-width: 1540px;">
+<iframe src="kalman_filter/index.html" width="100%" height="820px" style="border: none; display: block;" allow="fullscreen" allowfullscreen>
+  Your browser does not support iframes, needed to run this visualization.
+</iframe>
+</div>
+:::
