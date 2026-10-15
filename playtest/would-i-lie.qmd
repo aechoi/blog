@@ -3,6 +3,8 @@ title: "Would I Lie To You? — Home Rules"
 subtitle: "Playtest draft"
 search: false
 toc: true
+resources:
+  - "wilty/**"
 include-in-header:
   text: |
     <meta name="robots" content="noindex, nofollow">
@@ -12,217 +14,13 @@ include-in-header:
 This is an unlisted playtest page. The rules are a draft. If something felt off, slow or broken, write it in the playtest notes at the bottom.
 :::
 
-## Table helper
+::: {.callout-tip}
+## Play on your phones
 
-Keep this open on one phone at the table. It tracks whose turn it is, runs the timer and keeps score.
+[**Open the game →**](wilty/index.html)
 
-```{=html}
-<div id="wilty">
-  <div class="wilty-teams">
-    <label>Team 1 <input data-team="0" maxlength="20"></label>
-    <label>Team 2 <input data-team="1" maxlength="20"></label>
-    <label>Team 3 <input data-team="2" maxlength="20"></label>
-    <p class="wilty-hint">Enter teams in clockwise order around the table.</p>
-  </div>
-
-  <div class="wilty-scores"></div>
-
-  <div class="wilty-turn"></div>
-
-  <div class="wilty-timer">
-    <div class="wilty-phases">
-      <button data-phase="0">Huddle 30 s</button>
-      <button data-phase="1">Interrogate 90 s</button>
-      <button data-phase="2">Verdict 30 s</button>
-    </div>
-    <div class="wilty-clock">0:30</div>
-    <div class="wilty-row">
-      <button class="wilty-start">Start</button>
-      <button class="wilty-reset">Reset</button>
-    </div>
-  </div>
-
-  <div class="wilty-outcomes">
-    <p>Reveal — what happened?</p>
-    <div class="wilty-outcome-grid"></div>
-  </div>
-
-  <div class="wilty-row wilty-admin">
-    <button class="wilty-undo">Undo last</button>
-    <button class="wilty-newgame">New game</button>
-  </div>
-  <ol class="wilty-log" reversed></ol>
-</div>
-
-<style>
-#wilty { border: 1px solid #ddd; border-radius: 8px; padding: 1rem; margin-bottom: 2rem; }
-#wilty button { border: 1px solid #bbb; border-radius: 6px; background: #f8f8f8; padding: .45rem .7rem; cursor: pointer; font: inherit; }
-#wilty button:hover { background: #eee; }
-#wilty button.active { background: #325d88; border-color: #325d88; color: #fff; }
-.wilty-teams { display: flex; flex-wrap: wrap; gap: .5rem 1rem; }
-.wilty-teams label { display: flex; align-items: center; gap: .4rem; }
-.wilty-teams input { width: 9rem; padding: .25rem .4rem; border: 1px solid #ccc; border-radius: 4px; }
-.wilty-hint { width: 100%; margin: 0; font-size: .85rem; color: #777; }
-.wilty-scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 1rem 0; text-align: center; }
-.wilty-scores div { border-radius: 6px; background: #f3f1ec; padding: .5rem; }
-.wilty-scores div.reading { outline: 2px solid #325d88; }
-.wilty-scores b { display: block; font-size: 1.8rem; line-height: 1.2; }
-.wilty-turn { margin-bottom: 1rem; }
-.wilty-turn p { margin: .15rem 0; }
-.wilty-timer { text-align: center; margin-bottom: 1rem; }
-.wilty-phases, .wilty-row { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
-.wilty-clock { font-size: 3.5rem; font-variant-numeric: tabular-nums; margin: .25rem 0; }
-.wilty-clock.done { color: #d9534f; }
-.wilty-outcomes p { margin: 0 0 .4rem; font-weight: 600; }
-.wilty-outcome-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
-.wilty-outcome-grid button { text-align: left; }
-.wilty-outcome-grid small { display: block; color: #666; }
-.wilty-outcome-grid button:hover small { color: #444; }
-.wilty-admin { justify-content: flex-start; margin-top: 1rem; }
-.wilty-log { font-size: .85rem; color: #555; margin: .75rem 0 0; max-height: 12rem; overflow-y: auto; }
-@media (max-width: 480px) { .wilty-outcome-grid { grid-template-columns: 1fr; } }
-</style>
-
-<script>
-(() => {
-  const KEY = "wilty-playtest-v1";
-  const PHASES = [30, 90, 30];
-  const root = document.getElementById("wilty");
-  const $ = (s) => root.querySelector(s);
-
-  const fresh = (names) => ({ names: names || ["Team 1", "Team 2", "Team 3"], scores: [0, 0, 0], round: 0, log: [] });
-  let state;
-  try { state = JSON.parse(localStorage.getItem(KEY)) || fresh(); } catch { state = fresh(); }
-  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch {} };
-
-  // Teams sit clockwise, so the team on your left is the next one clockwise.
-  // Each turn is two rounds: left pile (shared with the next team), then right pile.
-  const roles = () => {
-    const reader = Math.floor(state.round / 2) % 3;
-    const left = (reader + 1) % 3, right = (reader + 2) % 3;
-    const leftRound = state.round % 2 === 0;
-    const partner = leftRound ? left : right;   // other author in this pile
-    const guessers = leftRound ? right : left;  // team across from the pile
-    return { reader, partner, guessers, leftRound };
-  };
-
-  const render = () => {
-    const n = state.names, r = roles();
-    root.querySelectorAll("[data-team]").forEach((el) => {
-      if (document.activeElement !== el) el.value = n[el.dataset.team];
-    });
-    $(".wilty-scores").innerHTML = n.map((name, i) =>
-      `<div class="${i === r.reader ? "reading" : ""}"><span></span><b>${state.scores[i]}</b></div>`).join("");
-    $(".wilty-scores").querySelectorAll("span").forEach((el, i) => (el.textContent = n[i]));
-
-    const rotation = Math.floor(state.round / 6) + 1;
-    $(".wilty-turn").innerHTML =
-      `<p><strong>Rotation ${rotation}, round ${(state.round % 6) + 1} of 6</strong></p>
-       <p>Reading: <strong data-n="${r.reader}"></strong> — ${r.leftRound ? "left" : "right"} pile (shared with <span data-n="${r.partner}"></span>)</p>
-       <p>Guessing: <strong data-n="${r.guessers}"></strong> · Timekeeping: <span data-n="${r.partner}"></span></p>`;
-    $(".wilty-turn").querySelectorAll("[data-n]").forEach((el) => (el.textContent = n[el.dataset.n]));
-
-    const outcomes = [
-      ["Truth, guessed Truth", `${n[r.guessers]} +1`],
-      ["Truth, guessed Lie", `${n[r.reader]} +1`],
-      ["Lie, guessed Truth", `${n[r.reader]} +2`],
-      ["Lie, guessed Lie", `${n[r.guessers]} +1, ${n[r.partner]} +1`],
-    ];
-    const grid = $(".wilty-outcome-grid");
-    grid.innerHTML = "";
-    outcomes.forEach(([label, pts], i) => {
-      const b = document.createElement("button");
-      b.textContent = label;
-      const s = document.createElement("small");
-      s.textContent = pts;
-      b.append(s);
-      b.onclick = () => score(i);
-      grid.append(b);
-    });
-
-    const log = $(".wilty-log");
-    log.innerHTML = "";
-    state.log.slice().reverse().forEach((e) => {
-      const li = document.createElement("li");
-      li.textContent = e.text;
-      log.append(li);
-    });
-  };
-
-  const score = (outcome) => {
-    const r = roles(), n = state.names;
-    const delta = [0, 0, 0];
-    if (outcome === 0) delta[r.guessers] += 1;
-    if (outcome === 1) delta[r.reader] += 1;
-    if (outcome === 2) delta[r.reader] += 2;
-    if (outcome === 3) { delta[r.guessers] += 1; delta[r.partner] += 1; }
-    const labels = ["truth believed", "truth called a lie", "lie believed", "lie caught"];
-    const pts = delta.map((d, i) => (d ? `${n[i]} +${d}` : null)).filter(Boolean).join(", ");
-    state.log.push({ delta, text: `${n[r.reader]} read, ${labels[outcome]}: ${pts}` });
-    delta.forEach((d, i) => (state.scores[i] += d));
-    state.round += 1;
-    save(); setPhase(0); render();
-  };
-
-  $(".wilty-undo").onclick = () => {
-    const last = state.log.pop();
-    if (!last) return;
-    last.delta.forEach((d, i) => (state.scores[i] -= d));
-    state.round -= 1;
-    save(); render();
-  };
-  $(".wilty-newgame").onclick = () => {
-    if (!confirm("Clear scores and start a new game?")) return;
-    state = fresh(state.names);
-    save(); setPhase(0); render();
-  };
-  root.querySelectorAll("[data-team]").forEach((el) => {
-    el.oninput = () => { state.names[el.dataset.team] = el.value || `Team ${+el.dataset.team + 1}`; save(); render(); };
-  });
-
-  // Timer
-  let phase = 0, remaining = PHASES[0], timer = null, endAt = 0;
-  const clock = $(".wilty-clock"), startBtn = $(".wilty-start");
-  const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-  const drawClock = () => {
-    clock.textContent = fmt(Math.ceil(remaining));
-    clock.classList.toggle("done", remaining <= 0);
-    startBtn.textContent = timer ? "Pause" : "Start";
-    root.querySelectorAll("[data-phase]").forEach((b) => b.classList.toggle("active", +b.dataset.phase === phase));
-  };
-  const stop = () => { clearInterval(timer); timer = null; };
-  const beep = () => {
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      [0, 0.25, 0.5].forEach((t) => {
-        const o = ctx.createOscillator(), g = ctx.createGain();
-        o.frequency.value = 880; g.gain.value = 0.2;
-        o.connect(g).connect(ctx.destination);
-        o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.15);
-      });
-    } catch {}
-    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-  };
-  const tick = () => {
-    remaining = Math.max(0, (endAt - Date.now()) / 1000);
-    if (remaining <= 0) { stop(); beep(); }
-    drawClock();
-  };
-  const setPhase = (p) => { stop(); phase = p; remaining = PHASES[p]; drawClock(); };
-  root.querySelectorAll("[data-phase]").forEach((b) => (b.onclick = () => setPhase(+b.dataset.phase)));
-  startBtn.onclick = () => {
-    if (timer) { stop(); drawClock(); return; }
-    if (remaining <= 0) remaining = PHASES[phase];
-    endAt = Date.now() + remaining * 1000;
-    timer = setInterval(tick, 200);
-    drawClock();
-  };
-  $(".wilty-reset").onclick = () => setPhase(phase);
-
-  render(); drawClock();
-})();
-</script>
-```
+One person taps **Host a new game** and keeps that phone open and awake; everyone else joins with the four-letter room code. The phones handle the cards, timers, voting and scoring. Everyone should be on the same Wi-Fi if possible.
+:::
 
 ## Overview
 
@@ -274,7 +72,7 @@ Guessers score 1 point for every correct call. A successful lie is worth 2 point
 | **True** | Guessers +1 | Reader's team +1 |
 | **A lie** | Liar's team +2 | Guessers +1, card author's team +1 |
 
-All points go to teams. Keep a running tally on a spare card (or use the table helper above).
+All points go to teams. Keep a running tally on a spare card.
 
 ## Ending the game
 
