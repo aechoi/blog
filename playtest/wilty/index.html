@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#1d1b22">
+  <title>Would I Lie To You?</title>
+  <style>
+    :root {
+      --bg: #f6f3ee;
+      --panel: #ffffff;
+      --ink: #1d1b22;
+      --muted: #6b6772;
+      --line: #e3ddd4;
+      --t0: #d9692b;
+      --t1: #13897c;
+      --t2: #7f52c2;
+      --truth: #2e8b57;
+      --lie: #c8423b;
+      --accent: #1d1b22;
+      --accent-ink: #fff;
+      color-scheme: light dark;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #17151b;
+        --panel: #221f27;
+        --ink: #f1edf5;
+        --muted: #a39dab;
+        --line: #36313d;
+        --t0: #f08a4b;
+        --t1: #2fb5a5;
+        --t2: #a57ce6;
+        --truth: #4cc286;
+        --lie: #ef6a62;
+        --accent: #f1edf5;
+        --accent-ink: #17151b;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--ink); }
+    body {
+      font: 17px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+      padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+      -webkit-tap-highlight-color: transparent;
+    }
+    #app { max-width: 560px; margin: 0 auto; padding: 12px 16px 48px; min-height: 100vh; border-top: 6px solid transparent; }
+    #app.on-t0 { border-top-color: var(--t0); }
+    #app.on-t1 { border-top-color: var(--t1); }
+    #app.on-t2 { border-top-color: var(--t2); }
+    h1, h2, h3 { line-height: 1.15; margin: 0.6em 0 0.4em; }
+    h2 { font-size: 1.35rem; }
+    h3 { font-size: 1.05rem; }
+    a { color: inherit; }
+
+    button {
+      font: inherit; color: var(--ink); background: var(--panel);
+      border: 1.5px solid var(--line); border-radius: 12px;
+      padding: 12px 16px; min-height: 48px; cursor: pointer;
+    }
+    button:active { transform: translateY(1px); }
+    button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+    button.danger { color: var(--lie); }
+    button.small { padding: 6px 10px; min-height: 36px; font-size: 0.9rem; border-radius: 9px; }
+    input, textarea {
+      font: inherit; color: var(--ink); background: var(--bg);
+      border: 1.5px solid var(--line); border-radius: 10px; padding: 10px 12px; width: 100%;
+    }
+    textarea { resize: vertical; }
+    .field { display: block; margin: 0 0 12px; font-size: 0.9rem; color: var(--muted); }
+    .field input { margin-top: 4px; font-size: 1.05rem; }
+    .field.inline { display: flex; align-items: center; gap: 8px; margin: 0; }
+    .field.inline input { width: 5.5rem; margin: 0; }
+
+    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin: 12px 0; }
+    .panel > :first-child { margin-top: 0; }
+    .panel > :last-child { margin-bottom: 0; }
+    .center { text-align: center; }
+    .hint { color: var(--muted); font-size: 0.88rem; }
+    .error { background: color-mix(in srgb, var(--lie) 14%, transparent); color: var(--lie); border-radius: 10px; padding: 10px 12px; }
+    .status { text-align: center; color: var(--muted); font-size: 0.9rem; margin: 4px 0; }
+    .actions { display: flex; gap: 10px; margin: 12px 0; }
+    .actions > button { flex: 1; }
+    .actions.wrap { flex-wrap: wrap; }
+    .actions.wrap > button { flex: 1 1 45%; }
+    .row { display: flex; align-items: center; gap: 6px; padding: 6px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+    .row:last-child { border-bottom: 0; }
+    .spacer { flex: 1; }
+    .waiting { text-align: center; color: var(--muted); margin: 24px 0; }
+
+    .home-head { text-align: center; margin: 28px 0 12px; }
+    .home-head h1 { font-size: 2.4rem; margin: 0; letter-spacing: -0.02em; }
+    .home-head p { color: var(--muted); margin: 6px 0 0; }
+    .home-head + .panel button, .panel > button { width: 100%; margin-bottom: 8px; }
+    #code { text-transform: uppercase; letter-spacing: 0.3em; font-weight: 700; }
+
+    .topbar { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: var(--muted); gap: 8px; }
+    .topbar b { color: var(--ink); letter-spacing: 0.1em; }
+    .chip { display: inline-block; padding: 1px 9px; border-radius: 999px; color: #fff; font-size: 0.82rem; font-weight: 600; vertical-align: 1px; }
+    .chip.big { font-size: 1.2rem; padding: 2px 14px; }
+    .t0.chip, .score.t0 b { background: var(--t0); }
+    .t1.chip, .score.t1 b { background: var(--t1); }
+    .t2.chip, .score.t2 b { background: var(--t2); }
+    .scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0; }
+    .score { display: flex; align-items: stretch; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--line); background: var(--panel); }
+    .score span { flex: 1; padding: 4px 8px; font-size: 0.85rem; align-self: center; }
+    .score b { color: #fff; min-width: 2.2em; display: grid; place-items: center; font-size: 1.15rem; }
+    .score.reading { border-color: var(--ink); }
+
+    .big-code { font-size: 3rem; font-weight: 800; letter-spacing: 0.25em; margin: 0; }
+    .teams { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .teamcol { background: var(--panel); border: 1px solid var(--line); border-top: 5px solid; border-radius: 12px; padding: 8px 10px 10px; }
+    .teamcol.t0 { border-top-color: var(--t0); }
+    .teamcol.t1 { border-top-color: var(--t1); }
+    .teamcol.t2 { border-top-color: var(--t2); }
+    .teamcol h3 { margin: 0 0 4px; }
+    .teamcol ul { list-style: none; padding: 0; margin: 0 0 8px; font-size: 0.92rem; min-height: 2.6em; }
+    .teamcol button { width: 100%; }
+    li.offline { color: var(--muted); text-decoration: line-through; }
+    li.empty { color: var(--muted); font-style: italic; }
+    .chip-btn.on { color: #fff; font-weight: 600; }
+    .chip-btn.t0.on { background: var(--t0); border-color: var(--t0); }
+    .chip-btn.t1.on { background: var(--t1); border-color: var(--t1); }
+    .chip-btn.t2.on { background: var(--t2); border-color: var(--t2); }
+    .joinlate .chip-btn { color: #fff; }
+    details summary { cursor: pointer; font-weight: 600; }
+    .hostctl { border-style: dashed; }
+    .hostctl .actions { margin-bottom: 0; }
+
+    .tips { padding-left: 1.1em; margin: 0 0 12px; font-size: 0.93rem; }
+    .cards { list-style: none; padding: 0; margin: 0; }
+    .cards li { display: flex; gap: 8px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--line); }
+    .cards li:last-child { border-bottom: 0; }
+    .cards span { flex: 1; }
+
+    .timer { margin: 4px 0 12px; }
+    .timer .time { font-size: 3rem; font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; line-height: 1.1; }
+    .timer .bar { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+    .timer .bar i { display: block; height: 100%; background: var(--ink); transition: width 0.2s linear; }
+    .timer.low .time { color: var(--lie); }
+    .timer.low .bar i { background: var(--lie); }
+    .roundinfo { color: var(--muted); font-size: 0.88rem; text-align: center; margin: 8px 0 0; }
+    .phase { text-align: center; margin: 4px 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
+    .stage { font-size: 1.05rem; }
+    .lead { font-size: 1.25rem; font-weight: 600; text-align: center; }
+    .shout { font-size: 2.2rem; margin: 8px 0; }
+    .card { margin: 0 0 12px; padding: 16px; border-radius: 12px; background: var(--bg); border: 1.5px solid var(--line); font-size: 1.2rem; position: relative; }
+    .card p { margin: 0; }
+    .badge { display: inline-block; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; color: #fff; padding: 2px 10px; border-radius: 6px; margin-bottom: 8px; }
+    .badge.truth { background: var(--truth); }
+    .badge.lie { background: var(--lie); }
+    .votes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .vote { min-height: 84px; font-size: 1.4rem; font-weight: 700; }
+    .vote.truth.on { background: var(--truth); border-color: var(--truth); color: #fff; }
+    .vote.lie.on { background: var(--lie); border-color: var(--lie); color: #fff; }
+    .votes.locked .vote { opacity: 0.6; pointer-events: none; }
+    .teamvotes { list-style: none; padding: 0; margin: 8px 0; font-size: 0.95rem; }
+    .reveal { font-size: 2rem; font-weight: 800; margin: 4px 0 12px; }
+    .reveal.truth { color: var(--truth); }
+    .reveal.lie { color: var(--lie); }
+    .points { list-style: none; padding: 0; margin: 8px 0 0; font-size: 1.2rem; font-weight: 700; }
+    .history { padding: 0; list-style: none; }
+    .history li { padding: 8px 0; border-bottom: 1px solid var(--line); }
+    .history .badge { margin: 0 6px 0 0; font-size: 0.7rem; }
+    .toast {
+      position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+      background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 12px; max-width: calc(100% - 32px); z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <main id="app"><noscript>This game needs JavaScript.</noscript></main>
+  <script src="vendor/peerjs.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
