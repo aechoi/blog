@@ -1,5 +1,5 @@
-import { TEAMS, MAX_CARD_LENGTH, createGame, addPlayer, setConnected, act, tick, viewFor } from "./game.js";
-import { hostRoom, joinRoom, isLocalMode } from "./net.js";
+import { TEAMS, MAX_CARD_LENGTH, createGame, addPlayer, setConnected, act, tick, viewFor } from "./game.js?v=20261016";
+import { hostRoom, joinRoom, isLocalMode } from "./net.js?v=20261016";
 
 const $app = document.getElementById("app");
 const HOST_KEY = "wilty-host-game";

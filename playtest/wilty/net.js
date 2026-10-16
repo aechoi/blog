@@ -11,7 +11,7 @@
 // tested in several tabs of one browser, without any network. `?broker=URL[,URL]`
 // uses brokers of your choice instead of the public ones.
 
-import mqtt from "./vendor/mqtt.esm.js";
+import mqtt from "./vendor/mqtt.esm.js?v=20261016";
 
 const PUBLIC_BROKERS = ["wss://broker.emqx.io:8084/mqtt", "wss://broker.hivemq.com:8884/mqtt"];
 const PING_MS = 4000;
