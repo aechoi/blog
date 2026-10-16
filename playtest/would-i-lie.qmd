@@ -19,7 +19,7 @@ This is an unlisted playtest page. The rules are a draft. If something felt off,
 
 [**Open the game →**](wilty/index.html)
 
-One person taps **Host a new game** and keeps that phone open and awake; everyone else joins with the four-letter room code. The phones handle the cards, timers, voting and scoring. Everyone should be on the same Wi-Fi if possible.
+One person taps **Host a new game** and keeps that phone open and awake; everyone else joins with the four-letter room code. The phones handle the cards, timers, voting and scoring. Works on Wi-Fi or mobile data.
 :::
 
 ## Overview

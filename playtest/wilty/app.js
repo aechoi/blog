@@ -63,7 +63,9 @@ function startHosting(code, saved) {
       }
       const pid = conns.get(connId);
       // A host that reloaded doesn't know existing connections yet; ask who they are.
-      if (msg.t === "act" && !pid) return net.send(connId, { t: "who" });
+      if (msg.t === "act" && !pid) return net.send(connId, { t: "who", retry: true });
+      // Heartbeats from a phone we've marked as gone (slept, or the host reloaded).
+      if (msg.t === "ping") return void (pid || net.send(connId, { t: "who" }));
       if (msg.t === "act" && pid) {
         const err = act(g, pid, msg.a);
         if (err) net.send(connId, { t: "error", text: err });
@@ -99,7 +101,7 @@ function startJoining(code) {
     onMessage(msg) {
       if (msg?.t === "view") receiveView(msg.v);
       if (msg?.t === "error") toast(msg.text);
-      if (msg?.t === "who") { net.send({ t: "hello", pid: myId, name: myName }); toast("Reconnected. Tap again."); }
+      if (msg?.t === "who") { net.send({ t: "hello", pid: myId, name: myName }); if (msg.retry) toast("Reconnected. Tap again."); }
     },
     onStatus(text) { status = text; render(); },
     onFatal(text) { status = null; view = null; renderHome(text); },
@@ -186,7 +188,9 @@ function renderHome(error) {
     const code = document.getElementById("code").value.trim().toUpperCase();
     if (!getName()) return;
     if (!/^[A-Z]{4}$/.test(code)) return toastInline("Room codes are four letters.");
-    history.replaceState(null, "", `?${isLocalMode() ? "local&" : ""}room=${code}`);
+    const q = new URLSearchParams(location.search);
+    q.set("room", code);
+    history.replaceState(null, "", `?${q}`.replace("local=&", "local&").replace(/local=$/, "local"));
     startJoining(code);
   };
   document.getElementById("host").onclick = () => {
@@ -476,7 +480,6 @@ addEventListener("beforeunload", (e) => {
 });
 
 const roomParam = (new URLSearchParams(location.search).get("room") || "").toUpperCase();
-if (!isLocalMode() && typeof Peer === "undefined") renderHome("Couldn't load the connection library. Check your internet and reload.");
 // A reload mid-game drops straight back into the same room as the same player.
-else if (roomParam && roomParam === store.get(ROOM_KEY) && store.get(NAME_KEY) && store.get("wilty-rejoin", sessionStorage)) startJoining(roomParam);
+if (roomParam && roomParam === store.get(ROOM_KEY) && store.get(NAME_KEY) && store.get("wilty-rejoin", sessionStorage)) startJoining(roomParam);
 else renderHome();
