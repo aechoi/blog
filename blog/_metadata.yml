@@ -6,6 +6,10 @@ format:
   ipynb: default
 execute:
   enabled: true
+  # Only re-run a post's code when its source changes; otherwise reuse the
+  # results saved in _freeze/ (commit that folder). Keeps publishing fast
+  # and stops unchanged notebooks from getting new outputs on every render.
+  freeze: auto
 number-sections: true
 comments:
   giscus:
