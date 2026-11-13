@@ -27,7 +27,7 @@ export function createRadiusSliderView(
   }
 
   function currentValue() {
-    return store.state.path ? store.getPositionAt(store.state.playhead)[channel] : min;
+    return store.state.path ? store.getPositionAt(store.state.playhead)[channel] : max;
   }
 
   function draw() {

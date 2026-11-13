@@ -4,6 +4,11 @@ format:
     code-tools:
       source: repo
   ipynb: default
+# The demos are interactive pages, not documents anyone wants a copy of
+# in another format, so the "Other Formats" box in the margin is noise.
+# This hides the links without dropping the ipynb output itself, which
+# the notebook-backed demos still build.
+format-links: false
 # execute:
 #   enabled: true
 number-sections: true

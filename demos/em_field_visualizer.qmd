@@ -2,7 +2,7 @@
 title: "Electromagnetic Field Visualizer"
 date: 2026-08-13
 categories:
-- electrodynamics
+- electromagnetics
 draft: false
 resources:
 - "em_field_visualizer/**"

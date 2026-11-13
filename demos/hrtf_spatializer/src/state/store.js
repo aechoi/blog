@@ -3,7 +3,7 @@ import { computePeaks, createEmptyPeaks, clonePeaks, createLivePeaksWriter } fro
 const DEFAULT_PATH_RATE = 60; // samples per second
 const DEFAULT_AZ = 0;
 const DEFAULT_EL = 0;
-const DEFAULT_R = 1;
+const DEFAULT_R = 5;
 const DEFAULT_CHANNEL_VALUE = { az: DEFAULT_AZ, el: DEFAULT_EL, r: DEFAULT_R };
 
 function timeToIndex(t, rate, length) {
