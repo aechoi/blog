@@ -6,6 +6,7 @@
   {
     "listing": "/demos.html",
     "items": [
+      "/demos/free_and_bound_charge.html",
       "/demos/kalman_filter.html",
       "/demos/hrtf_spatializer.html",
       "/demos/em_field_visualizer.html",
