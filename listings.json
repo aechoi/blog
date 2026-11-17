@@ -12,6 +12,7 @@
   {
     "listing": "/demos.html",
     "items": [
+      "/demos/conductors_and_capacitance.html",
       "/demos/free_and_bound_charge.html",
       "/demos/kalman_filter.html",
       "/demos/hrtf_spatializer.html",
